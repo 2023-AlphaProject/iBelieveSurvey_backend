@@ -1,0 +1,62 @@
+version: "3"
+services:
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: ./Dockerfile
+    image: nginx
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - django
+    links:
+      - django
+    entrypoint:
+      - /docker-entrypoint.sh
+    volumes:
+      - ./log:/var/log/nginx
+      - ./webapp/staticfiles:/static
+      - ./webapp/mediafiles:/media
+
+  django:
+    build:
+      context: ./webapp
+      dockerfile: ./Dockerfile
+    image: django
+    restart: always
+    command: >
+      bash -c "python ./manage.py makemigrations --noinput &&
+               python ./manage.py migrate --noinput &&
+               python ./manage.py collectstatic --noinput &&
+               gunicorn config.wsgi:application --env DJANGO_SETTINGS_MODULE=config.settings.local --bind 0.0.0.0:8000"
+    volumes:
+      - ./webapp:/srv
+      - ./log:/var/log/
+      - ./webapp/staticfiles:/srv/static
+      - ./webapp/mediafiles:/srv/media
+    depends_on:
+      - db
+
+  db:
+    image: postgres
+    expose:
+      - 5432
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_PORT=5432
+    volumes:
+      - ./db/initial_setup.sql:/docker-entrypoint-initdb.d/initial_setup.sql
+      - postgres_data:/var/lib/postgresql/data/
+    command: -p 5432
+
+volumes:
+  postgres_data:
+  staticfiles:
+  mediafiles:
+  # host에서 저장하지 않고 volumes 컨테이너를 통해 데이터를 관리한다.
