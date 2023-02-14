@@ -54,6 +54,7 @@ services:
       - ./db/initial_setup.sql:/docker-entrypoint-initdb.d/initial_setup.sql
       - postgres_data:/var/lib/postgresql/data/
     command: -p 5432
+    restart: always
 
 volumes:
   postgres_data:
