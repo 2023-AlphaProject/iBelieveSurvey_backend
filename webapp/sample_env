@@ -1,0 +1,6 @@
+DJANGO_SECRET_KEY=your-secret-key
+DATABASE_LOCAL_NAME=your-db-name
+DATABASE_LOCAL_USER=your-db-user
+DATABASE_LOCAL_PASSWORD=your-db-password
+DATABASE_LOCAL_HOST=your-db-host
+DATABASE_LOCAL_PORT=your-db-port
