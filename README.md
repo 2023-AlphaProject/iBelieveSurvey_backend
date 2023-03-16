@@ -29,3 +29,4 @@ docker-compose run --rm django python manage.py createsuperuser
 ```shell
 docker-compose run --rm django python manage.py makemigrations
 ```
+
