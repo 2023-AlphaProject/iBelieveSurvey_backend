@@ -39,7 +39,7 @@ DEFAULT_APPS = [
 ]
 
 USER_APPS = [
-
+    'survey',
 ]
 
 INSTALLED_APPS = DEFAULT_APPS + USER_APPS
