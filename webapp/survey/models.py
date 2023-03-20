@@ -8,6 +8,11 @@ class Survey(BaseModel):
     DONE = 2
     AWARDED = 3
 
+    class Meta:
+        db_table = 'survey'
+        verbose_name = 'Survey'
+        verbose_name_plural = 'Surveys'
+
     STATUS = (
         (IDLE, 'idle'),
         (ONGOING, 'ongoing'),
