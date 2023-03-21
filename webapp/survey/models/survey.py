@@ -1,5 +1,7 @@
-from config.baseModel import BaseModel
 from django.db import models
+
+from config.baseModel import BaseModel
+from survey.models import Category
 
 
 class Survey(BaseModel):
@@ -21,15 +23,25 @@ class Survey(BaseModel):
     )
 
     title = models.CharField(
+        verbose_name="설문 제목",
         max_length=255,
         null=False,
     )
 
     thumbnail = models.URLField(
+        verbose_name="설문 썸네일",
         max_length=255,
     )
 
+    category = models.ForeignKey(
+        Category,
+        verbose_name="카테고리",
+        on_delete=models.CASCADE,
+        null=False,
+    )
+
     data = models.JSONField(
+        verbose_name="설문 데이터",
         null=False,
     )
 
