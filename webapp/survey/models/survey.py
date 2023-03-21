@@ -1,6 +1,5 @@
 from django.db import models
 
-from category import Category
 from config.baseModel import BaseModel
 
 
@@ -34,10 +33,11 @@ class Survey(BaseModel):
     )
 
     category = models.ForeignKey(
-        Category,
+        'survey.Category',
         verbose_name="카테고리",
         on_delete=models.CASCADE,
         null=False,
+        default=1,
     )
 
     data = models.JSONField(
