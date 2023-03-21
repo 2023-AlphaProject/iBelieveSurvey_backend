@@ -1,7 +1,7 @@
 from django.db import models
 
+from category import Category
 from config.baseModel import BaseModel
-from survey.models import Category
 
 
 class Survey(BaseModel):
