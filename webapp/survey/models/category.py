@@ -1,9 +1,7 @@
 from django.db import models
 
-from config.baseModel import BaseModel
 
-
-class Category(BaseModel):
+class Category(models.Model):
     class Meta:
         db_table = 'category'
         verbose_name = 'Category'
