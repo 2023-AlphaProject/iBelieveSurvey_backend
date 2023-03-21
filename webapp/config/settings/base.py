@@ -28,14 +28,22 @@ ALLOWED_HOSTS = ['*']
 
 # Application definition
 
+JAZZMIN_SETTINGS = {
+    'site_title': 'IBelieveSurvey',
+    'site_header': 'IBelieveSurvey',
+    'site_brand': 'IBelieveSurvey',
+}
+
 DEFAULT_APPS = [
+    'jazzmin',
     'django.contrib.admin',
+    'drf_yasg',
+    'rest_framework',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
 ]
 
 USER_APPS = [
