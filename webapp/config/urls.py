@@ -36,7 +36,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('surveys', include(('survey.urls', 'api'))),
+    path('surveys/', include(('survey.urls', 'api'))),
 ]
 
 if settings.DEBUG:
