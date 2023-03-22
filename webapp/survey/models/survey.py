@@ -1,6 +1,7 @@
 from django.db import models
 
 from config.baseModel import BaseModel
+from webapp.user.models.user import User
 
 
 class Survey(BaseModel):
@@ -38,6 +39,13 @@ class Survey(BaseModel):
         on_delete=models.CASCADE,
         null=False,
         default=1,
+    )
+
+    user = models.ForeignKey(
+        User,
+        verbose_name="사용자",
+        on_delete=models.CASCADE,
+        null=False,
     )
 
     data = models.JSONField(
