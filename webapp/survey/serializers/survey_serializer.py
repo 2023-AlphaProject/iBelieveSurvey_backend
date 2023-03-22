@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Survey
+from survey.models import Survey
 
 
 class SurveySerializer(serializers.ModelSerializer):

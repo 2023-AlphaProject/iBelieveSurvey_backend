@@ -3,8 +3,8 @@ from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Survey
-from .serializers import SurveySerializer
+from survey.models import Survey
+from survey.serializers.survey_serializer import SurveySerializer
 
 
 # Create your views here.
@@ -15,7 +15,7 @@ class TestView(APIView):
         return Response("Swagger 연동 테스트1")
 
 
-class ListSurveyView(APIView):
+class SurveyListApiView(APIView):
     def get(self, request, format=None):
         surveys = Survey.objects.all()
         serializer = SurveySerializer(surveys, many=True)
