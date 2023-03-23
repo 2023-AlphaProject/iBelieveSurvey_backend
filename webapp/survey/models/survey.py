@@ -1,7 +1,7 @@
 from django.db import models
 
 from config.baseModel import BaseModel
-from user.models.user import User
+from user.models import User
 
 
 class Survey(BaseModel):
