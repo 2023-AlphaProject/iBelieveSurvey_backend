@@ -37,7 +37,7 @@ class User(BaseModel):
         null=False,
     )
 
-    birth_year = models.CharField(
+    birth = models.CharField(
         verbose_name="생년월일",
         max_length=20,
         null=False,
