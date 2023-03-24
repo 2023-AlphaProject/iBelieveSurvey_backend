@@ -1,4 +1,6 @@
+from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 
 from config.baseModel import BaseModel
 
@@ -62,3 +64,17 @@ class Survey(BaseModel):
         verbose_name="설문 종료 일시",
         null=False,
     )
+
+    def __str__(self):
+        return self.title
+
+    def clean(self):
+        self.validate_end_at_field()
+
+    def validate_end_at_field(self):
+        if timezone.localtime(timezone.now()) > self.end_at:
+            raise ValidationError('설문 종료 일시는 설문 생성 일시보다 빠를 수 없습니다.')
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
