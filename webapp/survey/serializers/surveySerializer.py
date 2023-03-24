@@ -16,3 +16,8 @@ class SurveySerializer(serializers.ModelSerializer):
             'is_survey_hidden',
             'created_at',
         ]
+
+        read_only_fields = [
+            'created_at',
+            'data',
+        ]

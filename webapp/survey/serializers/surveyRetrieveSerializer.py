@@ -17,3 +17,6 @@ class SurveyRetrieveSerializer(serializers.ModelSerializer):
             'created_at',
             'data',
         ]
+        read_only_fields = [
+            'created_at'
+        ]
