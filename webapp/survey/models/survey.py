@@ -42,7 +42,7 @@ class Survey(BaseModel):
 
     data = models.JSONField(
         verbose_name="설문 데이터",
-        null=False,
+        null=True,
     )
 
     status = models.IntegerField(
