@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from survey.models import Survey
-from survey.serializers.survey_serializer import SurveySerializer
+from survey.serializers.surveySerializer import SurveySerializer
 
 
 class SurveyListApiView(APIView):

@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.urls import path
 
-from survey.views.survey_list_apiview import SurveyListApiView
+from survey.views.surveyListApiView import SurveyListApiView
 
 urlpatterns = [
     path('survey', SurveyListApiView.as_view(), name='Surveylist')

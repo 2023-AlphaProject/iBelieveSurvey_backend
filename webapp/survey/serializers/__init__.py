@@ -1,1 +1,1 @@
-from .survey_serializer import SurveySerializer
+from .surveySerializer import SurveySerializer
