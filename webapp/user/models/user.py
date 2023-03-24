@@ -7,11 +7,10 @@ class User(BaseModel):
         verbose_name = 'User'
         verbose_name_plural = 'Users'
     
-    kakao_id = models.CharField(
-        verbose_name="카카오 id",
+    email = models.CharField(
+        verbose_name="카카오 계정 이메일",
         max_length=255,
         null=False,
-        primary_key=True,
     )
 
     profile_image = models.CharField(
