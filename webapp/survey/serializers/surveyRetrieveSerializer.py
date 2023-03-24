@@ -3,7 +3,7 @@ from rest_framework import serializers
 from survey.models import Survey
 
 
-class SurveyListSerializer(serializers.ModelSerializer):
+class SurveyRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Survey
         fields = [
@@ -15,4 +15,5 @@ class SurveyListSerializer(serializers.ModelSerializer):
             'end_at',
             'is_survey_hidden',
             'created_at',
+            'data',
         ]
