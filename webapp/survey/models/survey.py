@@ -3,7 +3,7 @@ from django.db import models
 from django.utils import timezone
 
 from config.baseModel import BaseModel
-from user.models import User
+from config.exceptions.handler import validate_multiple
 
 
 class Survey(BaseModel):
@@ -43,13 +43,6 @@ class Survey(BaseModel):
         default=1,
     )
 
-    user = models.ForeignKey(
-        User,
-        verbose_name="사용자",
-        on_delete=models.CASCADE,
-        null=False,
-    )
-
     data = models.JSONField(
         verbose_name="설문 데이터",
         null=True,
@@ -77,7 +70,9 @@ class Survey(BaseModel):
         return self.title
 
     def clean(self):
-        self.validate_end_at_field()
+        validate_multiple(
+            self.validate_end_at_field,
+        )
 
     def validate_end_at_field(self):
         if timezone.localtime(timezone.now()) > self.end_at:
