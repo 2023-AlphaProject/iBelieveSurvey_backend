@@ -45,7 +45,7 @@ class Survey(BaseModel):
         User,
         verbose_name="사용자",
         on_delete=models.CASCADE,
-        null=False,
+        null=True,
     )
 
     data = models.JSONField(

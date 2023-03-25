@@ -1,4 +1,4 @@
-FROM python:3.8-slim-buster as builder
+FROM python:3.9-buster as builder
 # python 3.8.10 설치
 
 ENV PYTHONDONTWRITEBYTECODE 1
