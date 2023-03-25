@@ -1,2 +1,2 @@
-from .category_admin import CategoryAdmin
-from .survey_admin import SurveyAdmin
+from .categoryAdmin import CategoryAdmin
+from .surveyAdmin import SurveyAdmin
