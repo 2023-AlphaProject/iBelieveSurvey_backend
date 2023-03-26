@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
+from user.models import User
 
 from config.baseModel import BaseModel
 from config.exceptions.handler import validate_multiple
@@ -41,6 +42,13 @@ class Survey(BaseModel):
         on_delete=models.CASCADE,
         null=False,
         default=1,
+    )
+
+    user = models.ForeignKey(
+        User,
+        verbose_name="사용자",
+        on_delete=models.CASCADE,
+        null=True,
     )
 
     data = models.JSONField(

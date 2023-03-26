@@ -541,3 +541,6 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/django,venv,macos,intellij,visualstudiocode,pycharm,python,windows
+
+# secret key
+secrets.json
