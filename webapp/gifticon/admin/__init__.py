@@ -1,1 +1,1 @@
-from .gifticon_admin import GifticonAdmin
+from .gifticonAdmin import GifticonAdmin
