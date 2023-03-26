@@ -55,6 +55,11 @@ USER_APPS = [
 
 INSTALLED_APPS = DEFAULT_APPS + USER_APPS
 
+REST_FRAMEWORK = {
+    'DATETIME_FORMAT': "%Y-%m-%d / %H:%M:%S",
+    'EXCEPTION_HANDLER': 'config.exceptions.custom_exception_handler',
+}
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -122,7 +127,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
