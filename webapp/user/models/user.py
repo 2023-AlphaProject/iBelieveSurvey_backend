@@ -4,6 +4,12 @@ from config.baseModel import BaseModel
 
 
 class User(BaseModel):
+    MAN = 1
+    WOMAN = 2
+
+    gender = ((MAN, 'man'),
+              (WOMAN, 'woman'))
+
     class Meta:
         db_table = 'user'
         verbose_name = 'User'
@@ -37,9 +43,10 @@ class User(BaseModel):
     gender = models.IntegerField(
         verbose_name="성별",
         null=False,
+        choices=gender
     )
 
-    birth = models.CharField(
+    birth = models.DateTimeField(
         verbose_name="생년월일",
         max_length=20,
         null=False,
