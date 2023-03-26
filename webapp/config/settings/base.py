@@ -45,12 +45,13 @@ DEFAULT_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',
+    # 'django.contrib.sites',
 ]
 
 USER_APPS = [
     'survey',
     'user',
+    'gifticon',
 ]
 
 INSTALLED_APPS = DEFAULT_APPS + USER_APPS
