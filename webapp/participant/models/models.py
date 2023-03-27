@@ -5,8 +5,8 @@ from survey.models import Survey
 class Participant(models.Model):
     class Meta:
         db_table = 'participant'
-        verboase_name = 'participant'
-        verboase_name_plural = 'participants'
+        verbose_name = 'participant'
+        verbose_name_plural = 'participants'
 
     kakaoId = models.ForeignKey(
         User,
