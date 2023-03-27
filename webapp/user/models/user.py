@@ -16,7 +16,7 @@ class User(BaseModel):
         primary_key=True,
     )
 
-    profileImage = models.CharField(
+    profileImage = models.URLField(
         verbose_name="프로필 사진",
         max_length=255,
         null=True,

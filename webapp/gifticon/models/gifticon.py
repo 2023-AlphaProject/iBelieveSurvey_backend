@@ -15,7 +15,7 @@ class Gifticon(BaseModel):
         null=False
     )
 
-    price = models.BigIntegerField(
+    price = models.IntegerField(
         verbose_name="가격",
         null=False
     )
