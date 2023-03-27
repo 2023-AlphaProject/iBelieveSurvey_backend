@@ -13,14 +13,14 @@ class SurveyGifticon(BaseModel):
 
     survey = models.ForeignKey(
         Survey,
-        verbose_name="설문 ID",
+        verbose_name="설문",
         on_delete=models.CASCADE,
         null=False,
     )
 
     gifticon = models.ForeignKey(
         Gifticon,
-        verbose_name="설문 ID",
+        verbose_name="기프티콘",
         on_delete=models.CASCADE,
         null=False,
     )
