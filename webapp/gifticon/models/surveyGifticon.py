@@ -3,6 +3,7 @@ from django.db import models
 from config.baseModel import BaseModel
 from gifticon.models import Gifticon
 from survey.models import Survey
+from participant.models import Participant
 
 
 class SurveyGifticon(BaseModel):
@@ -35,7 +36,8 @@ class SurveyGifticon(BaseModel):
         null=False,
     )
 
-    receiver = models.CharField(
+    receiver = models.ForeignKey(
+        Participant,
         verbose_name="받는 분",
         null=False,
         max_length=45,
