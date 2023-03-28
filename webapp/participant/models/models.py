@@ -2,6 +2,7 @@ from django.db import models
 from user.models import User
 from survey.models import Survey
 
+
 class Participant(models.Model):
     class Meta:
         db_table = 'participant'

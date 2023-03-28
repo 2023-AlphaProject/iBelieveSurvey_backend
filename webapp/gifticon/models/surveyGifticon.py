@@ -39,6 +39,7 @@ class SurveyGifticon(BaseModel):
     receiver = models.ForeignKey(
         Participant,
         verbose_name="받는 분",
+        on_delete=models.CASCADE,
         null=False,
         max_length=45,
     )
