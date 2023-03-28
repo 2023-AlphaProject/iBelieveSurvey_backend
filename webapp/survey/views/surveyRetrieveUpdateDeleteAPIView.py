@@ -10,8 +10,14 @@ class SurveyRetrieveUpdateDestoryAPIView(RetrieveUpdateDestroyAPIView):
     queryset = Survey.objects.all()
 
     def get_serializer_class(self):
+        if getattr(self, 'swagger_fake_view', False):
+            return SurveySerializer
+
         instance = self.get_object()
-        if instance.is_survey_hidden and instance.end_at < timezone.now():
+        HIDDEN_END_SURVEY = instance.is_survey_hidden and instance.end_at < timezone.now()
+        NOT_STARTED_SURVEY = instance.status == Survey.IDLE
+
+        if HIDDEN_END_SURVEY or NOT_STARTED_SURVEY:
             return SurveySerializer
         else:
             return SurveyRetrieveSerializer
