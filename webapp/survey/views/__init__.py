@@ -1,2 +1,2 @@
 from .surveyAPIView import SurveyAPIView
-from .surveyRetrieveAPIView import SurveyRetrieveDestoryAPIView
+from .surveyRetrieveUpdateDeleteAPIView import SurveyRetrieveUpdateDestoryAPIView
