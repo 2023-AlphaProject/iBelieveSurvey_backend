@@ -1,8 +1,8 @@
 from django.urls import path
 
-from survey.views import SurveyAPIView, SurveyRetrieveDestoryAPIView
+from survey.views import SurveyAPIView, SurveyRetrieveUpdateDestoryAPIView
 
 urlpatterns = [
     path('', SurveyAPIView.as_view()),
-    path('<int:pk>/', SurveyRetrieveDestoryAPIView.as_view()),
+    path('<int:pk>/', SurveyRetrieveUpdateDestoryAPIView.as_view()),
 ]
