@@ -168,3 +168,5 @@ SOCIAL_OUTH_CONFIG = {
 
 SITE_ID = 1
 
+AUTH_USER_MODEL = 'user.User'
+
