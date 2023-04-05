@@ -26,12 +26,6 @@ class User(AbstractBaseUser,PermissionsMixin):
         null=False,
     )
 
-    profileImage = models.URLField(
-        verbose_name="프로필 사진",
-        max_length=255,
-        null=True,
-    )
-
     realName = models.CharField(
         verbose_name="실명",
         max_length=30,
@@ -55,3 +49,6 @@ class User(AbstractBaseUser,PermissionsMixin):
         max_length=20,
         null=False,
     )
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['', ]
