@@ -1,9 +1,10 @@
 from django.db import models
 
 from config.baseModel import BaseModel
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
 
-class User(BaseModel):
+class User(AbstractBaseUser,PermissionsMixin):
 
     gender = ((1, 'man'),
               (2, 'woman'))
@@ -17,7 +18,12 @@ class User(BaseModel):
         verbose_name="카카오 id",
         max_length=255,
         null=False,
-        primary_key=True,
+    )
+
+    email = models.CharField(
+        verbose_name="카카오 이메일",
+        max_length=255,
+        null=False,
     )
 
     profileImage = models.URLField(
