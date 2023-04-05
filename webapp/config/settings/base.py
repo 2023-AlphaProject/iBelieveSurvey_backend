@@ -48,9 +48,13 @@ DEFAULT_APPS = [
     'django.contrib.sites',
 ]
 
+# SITE_ID = 1
+
 USER_APPS = [
     'survey',
     'user',
+    'gifticon',
+    'participant',
 ]
 
 INSTALLED_APPS = DEFAULT_APPS + USER_APPS
@@ -160,3 +164,10 @@ SOCIAL_OUTH_CONFIG = {
     'KAKAO_REST_API_KEY': secrets['KAKAO_REST_API_KEY'],
     'KAKAO_REDIRECT_URI': secrets['KAKAO_REDIRECT_URI']
 }
+
+
+SITE_ID = 1
+
+
+
+
