@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+import json
 import os
 from pathlib import Path
 
@@ -24,25 +25,42 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 # Application definition
 
+JAZZMIN_SETTINGS = {
+    'site_title': 'IBelieveSurvey',
+    'site_header': 'IBelieveSurvey',
+    'site_brand': 'IBelieveSurvey',
+}
+
 DEFAULT_APPS = [
+    'jazzmin',
     'django.contrib.admin',
+    'drf_yasg',
+    'rest_framework',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
+    # 'django.contrib.sites',
 ]
 
 USER_APPS = [
-
+    'survey',
+    'user',
+    'gifticon',
+    'participant',
 ]
 
 INSTALLED_APPS = DEFAULT_APPS + USER_APPS
+
+REST_FRAMEWORK = {
+    'DATETIME_FORMAT': "%Y-%m-%d / %H:%M:%S",
+    'EXCEPTION_HANDLER': 'config.exceptions.custom_exception_handler',
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -111,7 +129,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
@@ -134,3 +152,17 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+secret_file = os.path.join(BASE_DIR, "secrets.json")
+secrets = None
+with open(secret_file) as f:
+    secrets = json.loads(f.read())
+
+SOCIAL_OUTH_CONFIG = {
+    'KAKAO_REST_API_KEY': secrets['KAKAO_REST_API_KEY'],
+    'KAKAO_REDIRECT_URI': secrets['KAKAO_REDIRECT_URI']
+}
+
+SITE_ID = 1
+
+AUTH_USER_MODEL = 'user.User'
