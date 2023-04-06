@@ -7,6 +7,7 @@ ENV PYTHONUNBUFFERED 1
 # 파이썬에서 출력 버퍼가 기본으로 작동하는데 이 버퍼를 없애준다. 이를 통해 파이썬 로그를 더 빠르게 출력
 
 RUN apt-get -y update
+RUN apt-get install gcc
 
 FROM builder as package
 
