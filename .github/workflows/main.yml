@@ -33,6 +33,8 @@ jobs:
           echo "DATABASE_LOCAL_PASSWORD=$DATABASE_LOCAL_PASSWORD" >> ./webapp/.env
           echo "DATABASE_LOCAL_HOST=$DATABASE_LOCAL_HOST" >> ./webapp/.env
           echo "DATABASE_LOCAL_PORT=$DATABASE_LOCAL_PORT" >> ./webapp/.env
+          echo "KAKAO_REST_API_KEY=$KAKAO_REST_API_KEY" >> ./webapp/.env
+          echo "KAKAO_REDIRECT_URI=$KAKAO_REDIRECT_URI" >> ./webapp/.env
         env:
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           DATABASE_LOCAL_NAME: ${{ secrets.DATABASE_LOCAL_NAME }}
@@ -40,6 +42,8 @@ jobs:
           DATABASE_LOCAL_PASSWORD: ${{ secrets.DATABASE_LOCAL_PASSWORD }}
           DATABASE_LOCAL_HOST: ${{ secrets.DATABASE_LOCAL_HOST }}
           DATABASE_LOCAL_PORT: ${{ secrets.DATABASE_LOCAL_PORT }}
+          KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
+          KAKAO_REDIRECT_URI: ${{ secrets.KAKAO_REDIRECT_URI }}
 
 
   # 배포
