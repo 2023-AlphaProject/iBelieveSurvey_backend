@@ -1,1 +1,1 @@
-from .models import Participant
+from .participant import Participant

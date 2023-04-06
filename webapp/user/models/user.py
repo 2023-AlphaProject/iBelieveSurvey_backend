@@ -28,9 +28,6 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    gender = ((1, 'man'),
-              (2, 'woman'))
-
     class Meta:
         db_table = 'user'
         verbose_name = 'User'
@@ -65,7 +62,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     gender = models.BooleanField(
         verbose_name="성별",
         null=False,
-        choices=gender,
     )
 
     birth = models.DateField(
