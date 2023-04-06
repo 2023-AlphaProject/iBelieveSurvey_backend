@@ -17,9 +17,9 @@ jobs:
       # .env파일 생성. 웹을 만들다보면 유출되면 안되는 변수를 .env에 담는다. 배포할 때는 같이 빌드되어야하기 때문에 깃헙 액션으로 설정해줘야 한다.
       - name: Generate Environment Variables File for Docker-compose
         run: |
-          echo "POSTGRES_USER=$POSTGRES_USER" >> ./env
-          echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> ./env
-          echo "POSTGRES_PORT=$POSTGRES_PORT" >> ./env
+          echo "POSTGRES_USER=$POSTGRES_USER" >> ./.env
+          echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> ./.env
+          echo "POSTGRES_PORT=$POSTGRES_PORT" >> ./.env
         env:
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
