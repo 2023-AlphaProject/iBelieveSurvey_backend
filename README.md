@@ -30,3 +30,6 @@ docker-compose run --rm django python manage.py createsuperuser
 docker-compose run --rm django python manage.py makemigrations
 ```
 
+
+### ERD
+![image](https://user-images.githubusercontent.com/90228925/225353284-aad095b4-1880-4473-829f-29816290857c.png)

@@ -5,5 +5,4 @@ from user.models import User
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('kakaoId', 'profileImage', 'realName', 'phoneNumber', 'gender', 'birth')
-
+    list_display = ('email', 'realName', 'phoneNumber', 'gender', 'birth')
