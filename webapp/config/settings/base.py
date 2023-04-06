@@ -9,9 +9,9 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+import json
 import os
 from pathlib import Path
-import json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -25,7 +25,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -47,8 +47,6 @@ DEFAULT_APPS = [
     'django.contrib.staticfiles',
     # 'django.contrib.sites',
 ]
-
-# SITE_ID = 1
 
 USER_APPS = [
     'survey',
@@ -159,14 +157,12 @@ secret_file = os.path.join(BASE_DIR, "secrets.json")
 secrets = None
 with open(secret_file) as f:
     secrets = json.loads(f.read())
-    
+
 SOCIAL_OUTH_CONFIG = {
     'KAKAO_REST_API_KEY': secrets['KAKAO_REST_API_KEY'],
     'KAKAO_REDIRECT_URI': secrets['KAKAO_REDIRECT_URI']
 }
 
-
 SITE_ID = 1
 
 AUTH_USER_MODEL = 'user.User'
-

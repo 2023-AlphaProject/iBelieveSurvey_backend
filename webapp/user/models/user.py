@@ -1,7 +1,6 @@
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 
-from config.baseModel import BaseModel
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
 class UserManager(BaseUserManager):
     """ModelManager definition for User Model"""
@@ -24,11 +23,11 @@ class UserManager(BaseUserManager):
         kwargs.setdefault('realName', 'root')
         kwargs.setdefault('phoneNumber', '010-0000-0000')
         kwargs.setdefault('gender', True)
-        kwargs.setdefault('birth', '1900-01-01Z')
+        kwargs.setdefault('birth', '1900-01-01')
         self._create_user(email, password, **kwargs)
 
-class User(AbstractBaseUser,PermissionsMixin):
 
+class User(AbstractBaseUser, PermissionsMixin):
     gender = ((1, 'man'),
               (2, 'woman'))
 
@@ -85,4 +84,3 @@ class User(AbstractBaseUser,PermissionsMixin):
 
     def __str__(self) -> str:
         return f'[{self.realName} ({self.email})'
-
