@@ -2,28 +2,29 @@ name: CICD # actions 이름. 아무렇게나 지어도 됨
 
 on:
   push:
-    branches: [main] # main branch에 push될 때 해당 파일을 실행
+    branches: [ main ] # main branch에 push될 때 해당 파일을 실행
 
 jobs:
   # 빌드
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps: #step 순서대로 실행됨
       # 레포지토리의 파일을 CI 서버로 내려받음
-      - name: Checkout 				# step의 이름. 아무렇게나 지어도 됨
-        uses: actions/checkout@v2 	# 사용할 동작을 정의
-          
+      - name: Checkout                # step의 이름. 아무렇게나 지어도 됨
+        uses: actions/checkout@v3   # 사용할 동작을 정의
+        with:
+          ref: main
       # .env파일 생성. 웹을 만들다보면 유출되면 안되는 변수를 .env에 담는다. 배포할 때는 같이 빌드되어야하기 때문에 깃헙 액션으로 설정해줘야 한다.
       - name: Generate Environment Variables File for Docker-compose
         run: |
-          echo "POSTGRES_USER=$POSTGRES_USER" >> ./env
-          echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> ./env
-          echo "POSTGRES_PORT=$POSTGRES_PORT" >> ./env
+          echo "POSTGRES_USER=$POSTGRES_USER" >> ./.env
+          echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> ./.env
+          echo "POSTGRES_PORT=$POSTGRES_PORT" >> ./.env
         env:
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
-          
+
       - name: Generate Environment Variables File for settings.py
         run: |
           echo "DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY" >> ./webapp/.env
@@ -32,6 +33,8 @@ jobs:
           echo "DATABASE_LOCAL_PASSWORD=$DATABASE_LOCAL_PASSWORD" >> ./webapp/.env
           echo "DATABASE_LOCAL_HOST=$DATABASE_LOCAL_HOST" >> ./webapp/.env
           echo "DATABASE_LOCAL_PORT=$DATABASE_LOCAL_PORT" >> ./webapp/.env
+          echo "KAKAO_REST_API_KEY=$KAKAO_REST_API_KEY" >> ./webapp/.env
+          echo "KAKAO_REDIRECT_URI=$KAKAO_REDIRECT_URI" >> ./webapp/.env
         env:
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           DATABASE_LOCAL_NAME: ${{ secrets.DATABASE_LOCAL_NAME }}
@@ -39,16 +42,18 @@ jobs:
           DATABASE_LOCAL_PASSWORD: ${{ secrets.DATABASE_LOCAL_PASSWORD }}
           DATABASE_LOCAL_HOST: ${{ secrets.DATABASE_LOCAL_HOST }}
           DATABASE_LOCAL_PORT: ${{ secrets.DATABASE_LOCAL_PORT }}
-          
+          KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
+          KAKAO_REDIRECT_URI: ${{ secrets.KAKAO_REDIRECT_URI }}
+
 
   # 배포
   deploy:
     needs: build
     name: Deploy with Docker Compose
-    runs-on: [self-hosted, label-go]
+    runs-on: [ self-hosted, label-go ]
     steps:
       - name: Docker run
         run: |
-          docker-compose -f docker-compose.production.yml up -d --build
+          sudo docker-compose -f docker-compose.production.yml up -d --build
 
           
