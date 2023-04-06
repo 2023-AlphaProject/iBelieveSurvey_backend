@@ -7,7 +7,8 @@ on:
 jobs:
   # 빌드
   build:
-    runs-on: ubuntu-latest
+    runs-on:
+      runs-on: [ self-hosted, label-go ]
     steps: #step 순서대로 실행됨
       # 레포지토리의 파일을 CI 서버로 내려받음
       - name: Checkout                # step의 이름. 아무렇게나 지어도 됨
