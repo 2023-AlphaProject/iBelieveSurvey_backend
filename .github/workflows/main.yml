@@ -3,6 +3,10 @@ name: CICD # actions 이름. 아무렇게나 지어도 됨
 on:
   push:
     branches: [ main ] # main branch에 push될 때 해당 파일을 실행
+  pull_request:
+    branches:
+      - main
+    types: [ closed ]
 
 jobs:
   # 빌드
