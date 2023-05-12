@@ -38,3 +38,10 @@ class SurveyRetrieveUpdateDestoryAPIView(RetrieveUpdateDestroyAPIView):
             instance._prefetched_objects_cache = {}
 
         return Response(serializer.data)
+
+    def delete(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance.status != Survey.IDLE:
+            return Response({'error': '설문이 진행중이거나 종료되어서 삭제할 수 없습니다.'}, status=400)
+        self.perform_destroy(instance)
+        return Response(status=204)
