@@ -82,7 +82,9 @@ class Survey(BaseModel):
 
     def validate_end_at_field(self):
         if self.started_at is not None and self.started_at > self.end_at:
-            raise ValidationError('설문 종료 일시는 설문 생성 일시보다 빠를 수 없습니다.')
+            raise ValidationError('설문 종료 일시는 설문 시작 일시보다 빠를 수 없습니다.')
+        if timezone.now() > self.end_at:
+            raise ValidationError('설문 종료 일시는 현재 시간 보다 빠를 수 없습니다.')
 
     def save(self, *args, **kwargs):
         if self.started_at is None and self.is_idle is False:
