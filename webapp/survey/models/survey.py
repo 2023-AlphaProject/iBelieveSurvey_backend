@@ -74,6 +74,11 @@ class Survey(BaseModel):
         null=False,
     )
 
+    started_at = models.DateTimeField(
+        verbose_name="설문 시작 일시",
+        null=True,
+    )
+
     def __str__(self):
         return self.title
 
@@ -83,9 +88,11 @@ class Survey(BaseModel):
         )
 
     def validate_end_at_field(self):
-        if timezone.localtime(timezone.now()) > self.end_at:
+        if self.started_at > self.end_at:
             raise ValidationError('설문 종료 일시는 설문 생성 일시보다 빠를 수 없습니다.')
 
     def save(self, *args, **kwargs):
+        if self.status == Survey.ONGOING and self.started_at is None:
+            self.started_at = timezone.now()
         self.clean()
         super().save(*args, **kwargs)

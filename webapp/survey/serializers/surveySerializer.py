@@ -12,6 +12,7 @@ class SurveySerializer(serializers.ModelSerializer):
             'thumbnail',
             'category',
             'status',
+            'started_at',
             'end_at',
             'is_survey_hidden',
             'created_at',
