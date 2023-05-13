@@ -4,6 +4,8 @@ from survey.models import Survey
 
 
 class SurveyRetrieveSerializer(serializers.ModelSerializer):
+    participants = serializers.SerializerMethodField()
+
     class Meta:
         model = Survey
         fields = [
@@ -20,6 +22,7 @@ class SurveyRetrieveSerializer(serializers.ModelSerializer):
             'is_survey_hidden',
             'created_at',
             'data',
+            'participants',
         ]
         read_only_fields = [
             'created_at',
@@ -28,4 +31,8 @@ class SurveyRetrieveSerializer(serializers.ModelSerializer):
             'is_ongoing',
             'is_done',
             'started_at',
+            'participants',
         ]
+
+    def get_participants(self, obj):
+        return obj.participant_set.count()

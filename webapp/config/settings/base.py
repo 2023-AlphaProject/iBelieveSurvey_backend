@@ -40,6 +40,7 @@ DEFAULT_APPS = [
     'django.contrib.admin',
     'drf_yasg',
     'rest_framework',
+    'django_filters',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -60,6 +61,7 @@ INSTALLED_APPS = DEFAULT_APPS + USER_APPS
 REST_FRAMEWORK = {
     'DATETIME_FORMAT': "%Y-%m-%d / %H:%M:%S",
     'EXCEPTION_HANDLER': 'config.exceptions.custom_exception_handler',
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 }
 
 MIDDLEWARE = [
