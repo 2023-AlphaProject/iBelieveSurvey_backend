@@ -40,7 +40,7 @@ DEFAULT_APPS = [
     'django.contrib.admin',
     'drf_yasg',
     'rest_framework',
-    'django-filters',
+    'django_filters',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
