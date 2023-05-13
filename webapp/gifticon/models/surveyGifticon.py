@@ -1,10 +1,9 @@
 from django.db import models
-from django.utils import timezone
 
 from config.baseModel import BaseModel
 from gifticon.models import Gifticon
-from survey.models import Survey
 from participant.models import Participant
+from survey.models import Survey
 
 
 class SurveyGifticon(BaseModel):
