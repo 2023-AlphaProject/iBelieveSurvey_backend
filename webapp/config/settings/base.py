@@ -62,6 +62,7 @@ REST_FRAMEWORK = {
     'DATETIME_FORMAT': "%Y-%m-%d / %H:%M:%S",
     'EXCEPTION_HANDLER': 'config.exceptions.custom_exception_handler',
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_PAGINATION_CLASS': 'config.pagination.DefaultPagination',
 }
 
 MIDDLEWARE = [
