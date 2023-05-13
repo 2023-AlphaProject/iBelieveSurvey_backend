@@ -12,6 +12,7 @@ class Survey(BaseModel):
         db_table = 'survey'
         verbose_name = 'Survey'
         verbose_name_plural = 'Surveys'
+        ordering = ['id']
 
     title = models.CharField(
         verbose_name="설문 제목",
