@@ -44,7 +44,11 @@ class SurveyGifticon(BaseModel):
         max_length=45,
     )
 
+    def clean(self):
+        self.survey.clean()
+
     def save(self, *args, **kwargs):
         self.survey.is_idle = False
+        self.clean()
         self.survey.save()
         super().save(*args, **kwargs)
