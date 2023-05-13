@@ -14,8 +14,8 @@ class SurveyRetrieveUpdateDestoryAPIView(RetrieveUpdateDestroyAPIView):
             return SurveySerializer
 
         instance = self.get_object()
-        HIDDEN_END_SURVEY = instance.is_survey_hidden and instance.end_at < timezone.now()
-        NOT_STARTED_SURVEY = instance.status == Survey.IDLE
+        HIDDEN_END_SURVEY = instance.is_survey_hidden and instance.is_done
+        NOT_STARTED_SURVEY = instance.is_idle
 
         if HIDDEN_END_SURVEY or NOT_STARTED_SURVEY:
             return SurveySerializer
@@ -25,7 +25,7 @@ class SurveyRetrieveUpdateDestoryAPIView(RetrieveUpdateDestroyAPIView):
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
-        if instance.status != Survey.IDLE:
+        if not instance.is_idle:
             return Response({'error': '설문이 진행중이거나 종료되어서 수정할 수 없습니다.'}, status=400)
 
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
@@ -41,7 +41,6 @@ class SurveyRetrieveUpdateDestoryAPIView(RetrieveUpdateDestroyAPIView):
 
     def delete(self, request, *args, **kwargs):
         instance = self.get_object()
-        if instance.status != Survey.IDLE:
+        if not instance.is_idle:
             return Response({'error': '설문이 진행중이거나 종료되어서 삭제할 수 없습니다.'}, status=400)
-        self.perform_destroy(instance)
-        return Response(status=204)
+        return self.destroy(request, *args, **kwargs)

@@ -8,22 +8,10 @@ from config.exceptions.handler import validate_multiple
 
 
 class Survey(BaseModel):
-    IDLE = 0
-    ONGOING = 1
-    DONE = 2
-    AWARDED = 3
-
     class Meta:
         db_table = 'survey'
         verbose_name = 'Survey'
         verbose_name_plural = 'Surveys'
-
-    STATUS = (
-        (IDLE, 'idle'),
-        (ONGOING, 'ongoing'),
-        (DONE, 'done'),
-        (AWARDED, 'awarded'),
-    )
 
     title = models.CharField(
         verbose_name="설문 제목",
@@ -56,11 +44,16 @@ class Survey(BaseModel):
         null=True,
     )
 
-    status = models.IntegerField(
-        verbose_name="설문 상태",
+    is_idle = models.BooleanField(
+        verbose_name="설문 임시 저장 상태 여부",
         null=False,
-        choices=STATUS,
-        default=IDLE,
+        default=True,
+    )
+
+    is_awarded = models.BooleanField(
+        verbose_name="설문 보상 지급 완료 여부",
+        null=False,
+        default=False,
     )
 
     is_survey_hidden = models.BooleanField(
@@ -88,11 +81,25 @@ class Survey(BaseModel):
         )
 
     def validate_end_at_field(self):
-        if self.started_at > self.end_at:
+        if self.started_at is not None and self.started_at > self.end_at:
             raise ValidationError('설문 종료 일시는 설문 생성 일시보다 빠를 수 없습니다.')
 
     def save(self, *args, **kwargs):
-        if self.status == Survey.ONGOING and self.started_at is None:
+        if self.started_at is None and self.is_idle is False:
             self.started_at = timezone.now()
         self.clean()
         super().save(*args, **kwargs)
+
+    @property
+    def is_ongoing(self):
+        if self.started_at is None:
+            return False
+        return timezone.now() <= self.end_at
+
+    @property
+    def is_done(self):
+        if self.end_at < timezone.now() and not self.is_idle:
+            return True
+        return False
+
+    # TODO: is_awarded 로직 추가
