@@ -7,5 +7,4 @@ from survey.serializers import SurveySerializer
 class SurveyAPIView(CreateAPIView, ListAPIView):
     queryset = Survey.objects.all()
     serializer_class = SurveySerializer
-
     # TODO: filter, permission, pagination
