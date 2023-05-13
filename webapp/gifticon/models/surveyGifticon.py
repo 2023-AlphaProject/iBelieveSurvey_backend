@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 from config.baseModel import BaseModel
 from gifticon.models import Gifticon
@@ -43,3 +44,8 @@ class SurveyGifticon(BaseModel):
         null=False,
         max_length=45,
     )
+
+    def save(self, *args, **kwargs):
+        self.survey.is_idle = False
+        self.survey.save()
+        super().save(*args, **kwargs)
