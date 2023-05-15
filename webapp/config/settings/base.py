@@ -51,7 +51,9 @@ DEFAULT_APPS = [
 USER_APPS = [
     'survey',
     'user',
-    'gifticon',
+    'template',
+    'order',
+    'cart',
     'participant',
 ]
 

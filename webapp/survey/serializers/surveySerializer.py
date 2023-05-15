@@ -24,7 +24,7 @@ class SurveySerializer(serializers.ModelSerializer):
         read_only_fields = [
             'created_at',
             'started_at',
-            'data',
+            'data', #
             'is_idle',
             'is_awarded',
             'is_ongoing',
