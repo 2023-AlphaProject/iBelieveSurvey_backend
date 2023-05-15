@@ -154,15 +154,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-secret_file = os.path.join(BASE_DIR, "secrets.json")
-secrets = None
-with open(secret_file) as f:
-    secrets = json.loads(f.read())
     
 SOCIAL_OUTH_CONFIG = {
-    'KAKAO_REST_API_KEY': secrets['KAKAO_REST_API_KEY'],
-    'KAKAO_REDIRECT_URI': secrets['KAKAO_REDIRECT_URI']
+    'KAKAO_REST_API_KEY': os.environ.get('KAKAO_REST_API_KEY'),
+    'KAKAO_REDIRECT_URI': os.environ.get('KAKAO_REDIRECT_URI')
 }
 
 
