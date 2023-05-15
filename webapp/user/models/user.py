@@ -37,13 +37,6 @@ class User(AbstractBaseUser,PermissionsMixin):
         verbose_name = 'User'
         verbose_name_plural = 'Users'
 
-    # kakaoId = models.CharField(
-    #     verbose_name="카카오 id",
-    #     max_length=255,
-    #     null=False,
-    #     primary_key=True
-    # )
-
     email = models.CharField(
         verbose_name="카카오 이메일",
         max_length=255,
