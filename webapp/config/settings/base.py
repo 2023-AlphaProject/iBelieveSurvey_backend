@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-import json
 import os
 from pathlib import Path
 
@@ -160,15 +159,14 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-    
+
 SOCIAL_OUTH_CONFIG = {
     'KAKAO_REST_API_KEY': os.environ.get('KAKAO_REST_API_KEY'),
     'KAKAO_REDIRECT_URI': os.environ.get('KAKAO_REDIRECT_URI')
 }
 
-
 SITE_ID = 1
 
+AUTH_USER_MODEL = 'user.User'
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-
