@@ -9,9 +9,9 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+import json
 import os
 from pathlib import Path
-import json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -25,7 +25,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -40,6 +40,7 @@ DEFAULT_APPS = [
     'django.contrib.admin',
     'drf_yasg',
     'rest_framework',
+    'django_filters',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -63,6 +64,8 @@ INSTALLED_APPS = DEFAULT_APPS + USER_APPS
 REST_FRAMEWORK = {
     'DATETIME_FORMAT': "%Y-%m-%d / %H:%M:%S",
     'EXCEPTION_HANDLER': 'config.exceptions.custom_exception_handler',
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_PAGINATION_CLASS': 'config.pagination.DefaultPagination',
 }
 
 MIDDLEWARE = [
@@ -168,7 +171,4 @@ SITE_ID = 1
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-
-
-
 
