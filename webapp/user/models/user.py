@@ -40,7 +40,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         primary_key=True,
     )
 
-    real_name = models.CharField(
+    realName = models.CharField(
         verbose_name="실명",
         max_length=30,
         null=False,
