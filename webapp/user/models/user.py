@@ -16,12 +16,6 @@ class User(BaseModel):
         primary_key=True,
     )
 
-    profile_image = models.CharField(
-        verbose_name="프로필 사진",
-        max_length=255,
-        null=True,
-    )
-
     real_name = models.CharField(
         verbose_name="실명",
         max_length=30,
