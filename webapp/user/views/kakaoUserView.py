@@ -9,7 +9,7 @@ from django.http import JsonResponse
 @api_view(['GET'])
 @permission_classes([AllowAny, ])
 def kakaoGetLogin(request):
-    CLIENT_ID = "c177823802a7ea7d3b1cf9ff257b0785"
+    CLIENT_ID = "75901ab5c4920dfdcc9bfd7dfbfb5361"
     REDIRET_URL = "http://localhost:3000/user/kakao/callback"
     url = f"https://kauth.kakao.com/oauth/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRET_URL}&response_type=code"
     return redirect(url)
@@ -24,12 +24,12 @@ def kakaoCallback(request):
 
     res = {
         'grant_type': 'authorization_code',
-        "client_id": "c177823802a7ea7d3b1cf9ff257b0785",
+        "client_id": "75901ab5c4920dfdcc9bfd7dfbfb5361",
         "redirect_uri": "http://localhost:3000/user/kakao/callback",
         'code': code,
     }
     token_response = requests.post(url, data=res)
-
+    print(token_response.json())
     access_token = token_response.json().get('access_token')
 
     user_info_response = requests.get('https://kapi.kakao.com/v2/user/me', headers={"Authorization": f'Bearer ${access_token}'})
