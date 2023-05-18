@@ -1,7 +1,7 @@
 from django.db import models
 
 from survey.models import Survey
-from template.models import Template
+from template.models.template import Template
 
 
 class Cart(models.Model):
@@ -12,5 +12,5 @@ class Cart(models.Model):
 
     survey = models.ForeignKey(Survey, verbose_name="설문", on_delete=models.CASCADE, null=False)
     template = models.ForeignKey(Template, verbose_name="템플릿", on_delete=models.CASCADE, null=False)
-    quantity = models.IntegerField(verbose_name="템플릿 수량", null=False)
+    quantity = models.IntegerField(verbose_name="상품 수량", null=False)
 
