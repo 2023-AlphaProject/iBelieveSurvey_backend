@@ -15,6 +15,7 @@ env_absol_dir = os.path.join(script_absol_dir, '../../../.env')
 
 template_token_list = []
 
+
 class Command(BaseCommand):
     help = 'Create template objects and save in DB'
 
