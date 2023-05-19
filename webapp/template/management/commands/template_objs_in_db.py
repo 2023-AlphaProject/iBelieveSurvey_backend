@@ -105,7 +105,7 @@ class Command(BaseCommand):
                     product_image_url = product_data["product_image_url"]
                     product_thumb_image_url = product_data["product_thumb_image_url"]
                     brand_image_url = product_data["brand_image_url"]
-                    # product_price = product_data["product_price"]
+                    product_price = product_data["product_price"]
 
                     new_template = Template(template_token=template_token, template_name=template_name,
                                             template_trace_id=template_trace_id,
@@ -116,7 +116,7 @@ class Command(BaseCommand):
                                             product_name=product_name, brand_name=brand_name,
                                             product_image_url=product_image_url,
                                             product_thumb_image_url=product_thumb_image_url,
-                                            brand_image_url=brand_image_url, product_price=5)
+                                            brand_image_url=brand_image_url, product_price=product_price)
 
                     new_template.save()
         print("save!")

@@ -27,8 +27,10 @@ class Template(models.Model):
     product_image_url = models.URLField(max_length=200, verbose_name="상품 이미지 url", null=False, default="")
     product_thumb_image_url = models.URLField(max_length=200, verbose_name="상품 썸네일 이미지 url", null=False, default="")
     brand_image_url = models.URLField(max_length=200, verbose_name="브랜드 이미지 url", null=False, default="")
-    product_price = models.IntegerField(verbose_name="상품 가격", null=False, default=0)
+    product_price = models.IntegerField(verbose_name="상품 가격", null=False)
 
+    def __str__(self):
+        return self.template_name
 
 @receiver(pre_save, sender=Template)
 def hash_template_token(sender, instance, **kwargs):

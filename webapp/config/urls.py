@@ -38,7 +38,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('surveys/', include('survey.urls'), name='surveys'),
     path('user/', include('user.urls'), name='users'),
-    path('templates/', include('template.urls'), name='templates')
+    path('templates/', include('template.urls'), name='templates'),
+    path('carts/', include('cart.urls'), name='carts')
 
 ]
 
