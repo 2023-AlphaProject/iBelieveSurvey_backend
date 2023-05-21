@@ -38,7 +38,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('surveys/', include('survey.urls'), name='surveys'),
     path('user/', include('user.urls'), name='users'),
-    
+
 ]
 
 
