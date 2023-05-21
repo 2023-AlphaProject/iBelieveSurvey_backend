@@ -36,14 +36,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     kakaoId = models.IntegerField(
         verbose_name="카카오 id",
         null=False,
-        default=0,
+        default=1,
+        primary_key=True,
     )
 
     email = models.CharField(
         verbose_name="카카오 계정 이메일",
         max_length=255,
-        null=False,
-        primary_key=True,
+        null=True,
     )
 
     realName = models.CharField(
