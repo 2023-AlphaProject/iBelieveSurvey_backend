@@ -33,6 +33,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name = 'User'
         verbose_name_plural = 'Users'
 
+    kakaoId = models.IntegerField(
+        verbose_name="카카오 id",
+        null=False,
+        default=0,
+    )
+
     email = models.CharField(
         verbose_name="카카오 계정 이메일",
         max_length=255,
@@ -43,24 +49,24 @@ class User(AbstractBaseUser, PermissionsMixin):
     realName = models.CharField(
         verbose_name="실명",
         max_length=30,
-        null=False,
+        null=True,
     )
 
     phoneNumber = models.CharField(
         verbose_name="전화번호",
         max_length=20,
-        null=False,
+        null=True,
     )
 
     gender = models.BooleanField(
         verbose_name="성별",
-        null=False,
+        null=True,
     )
 
     birth = models.DateField(
         verbose_name="생년월일",
         max_length=20,
-        null=False,
+        null=True,
     )
 
     objects = UserManager()
