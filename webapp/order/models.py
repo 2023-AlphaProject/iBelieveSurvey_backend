@@ -18,13 +18,7 @@ class Order(models.Model):
 
     survey = models.ForeignKey(Survey, verbose_name="설문", on_delete=models.CASCADE, null=False)
     template = models.ForeignKey(Template, verbose_name="템플릿", on_delete=models.CASCADE, null=False)
-    template_token = models.CharField(max_length=200, verbose_name="템플릿 토큰", null=True)  # 외부로 노출되지 않도록 주의
-    receiver = models.ForeignKey(Participant, verbose_name="설문 객체", on_delete=models.CASCADE, null=False)
+    receiver = models.ForeignKey(Participant, verbose_name="템플릿 수신자", on_delete=models.CASCADE, null=False)
 
-
-@receiver(pre_save, sender=Template)
-def hash_template_token(sender, instance, **kwargs):
-    value = instance.template_token
-    if value is not None:
-        hashed_value = hashlib.sha256(value.encode()).hexdigest()
-        instance.template_token = hashed_value
+    def __str__(self):
+        return self.receiver.user.realName
