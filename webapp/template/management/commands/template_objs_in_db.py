@@ -14,7 +14,7 @@ script_absol_dir = os.path.dirname(os.path.abspath(__file__))
 env_absol_dir = os.path.join(script_absol_dir, '../../../.env')
 
 template_token_list = []
-
+template_num_in_env = 3
 
 class Command(BaseCommand):
     help = 'Create template objects and save in DB'
@@ -75,10 +75,36 @@ class Command(BaseCommand):
         total_count = json_data["totalCount"]
         templates = json_data["contents"]
 
-        # 템플릿이 중복되어 저장되지 않도록 DB에 저장되어 있던 기존 템플릿들을 삭제한다.
-        Template.objects.all().delete()
+        # 만약 Template객체가 존재한다면 (이미 빌드한 적이 있다면)
+            # 만약 Template의 객체의 수가 num과 같다면
+                # 업데이트할 필요없음
+        # 만약 Template객체가 존재하지 않다면 (빌드가 처음이라면)
 
-        # 응답에 실려온 template_name 추출해서 리스트에 담는다.
+        if Template.objects.exists(): # 이미 빌드한 적이 있다면
+
+            if Template.objects.count() == template_num_in_env: # db상의 모든 템플릿 객체들의 개수가 env파일의 템플릿 개수와 일치하다면
+                print("template 객체 개수 = ", Template.objects.count())
+                print("env 속 template 객체 개수 = ", template_num_in_env)
+                print("빌드가 실행된 적이 있지만 템플릿 개수가 일치함 -> 템플릿 업데이트 불필요")
+                pass
+            else: # db상의 모든 템플릿 객체들의 개수가 env파일의 템플릿 개수와 일치하지 않다면
+                print("template 객체 개수 = ", Template.objects.count())
+                print("env 속 template 객체 개수 = ", template_num_in_env)
+                print("빌드가 실행된 적이 있지만 템플릿 개수가 일치하지 않음 -> 템플릿 업데이트 필요")
+
+                Template.objects.all().delete() # 템플릿이 중복되어 저장되지 않도록 DB에 저장되어 있던 기존 템플릿들을 삭제한다.
+
+                # 응답에 실려온 template_name 추출해서 리스트에 담는다.
+                self.create_templates(templates, total_count)
+
+        else: # 빌드가 처음이라면
+            print("template 객체 개수 = ", Template.objects.count())
+            print("env 속 template 객체 개수 = ", template_num_in_env)
+            print("빌드가 처음으로 실행")
+            self.create_templates(templates, total_count)
+
+
+    def create_templates(self, templates, total_count):
         for n in range(0, total_count):
             template = templates[n]
             template_name = template["template_name"]
@@ -119,4 +145,8 @@ class Command(BaseCommand):
                                             brand_image_url=brand_image_url, product_price=product_price)
 
                     new_template.save()
-        print("save!")
+
+
+
+
+
