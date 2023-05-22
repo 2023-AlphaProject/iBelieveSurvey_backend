@@ -45,41 +45,14 @@ def kakaoCallback(request):
 
     kakao_account = profile_json.get("kakao_account")
     kakaoId = profile_json.get("id")
-    email = kakao_account.get("email", None) # 이메일
+    email = kakao_account.get("email", None) 
 
-    # 이메일 없으면 오류 => 카카오톡 최신 버전에서는 이메일 없이 가입 가능해서 추후 수정해야함
     if email is None:
         return JsonResponse({'err_msg': 'failed to get email'}, status=status.HTTP_400_BAD_REQUEST)
 
-
-
-
-    # # parsing
-
-    # if User.objects.filter(email=email).exists():
-    #     user = User.objects.get(email=email)
-    #     print('login')
-    # else:
-    #     user = User.objects.create(
-    # 	   email=email,
-    #     )
-    #     user.save()
-    # payload = JWT_PAYLOAD_HANDLER(user)
-    # jwt_token = JWT_ENCODE_HANDLER(payload)
-    # response = {
-    #     'success' : True, 
-    #     'token' : jwt_token
-    # }
-    # return Response(response, status=200)
-
-    # # return JsonResponse({"user_info": user_info_response.json()})
-
-
-
-
-    # 관리자가(employee) 기존에 카카오톡 계정이 DB에 저장되어 있는지 확인
-    if User.objects.filter(kakaoId=kakaoId).exists():  # 지금 접속한 카카오 아이디가 데이터베이스에 존재하는지 확인
-        user_info = User.objects.get(kakaoId=kakaoId)  # 존재하는 카카오 아이디를 가진 유저 객체를 가져옴
+    # 카카오톡 계정이 DB에 저장되어 있는지 확인
+    if User.objects.filter(kakaoId=kakaoId).exists():  
+        user_info = User.objects.get(kakaoId=kakaoId)  
         encoded_jwt = jwt.encode({'id': user_info.kakaoId}, SECRET_KEY, algorithm='HS256')  # jwt토큰 발행
         return HttpResponse(f'id:{user_info.kakaoId}, token:{encoded_jwt}, exist:true')
 
@@ -87,8 +60,8 @@ def kakaoCallback(request):
     else:
         User(
             kakaoId = kakaoId,
-            email = email, # 이메일 선택동의여서 없을 수도 잇음
+            email = email, 
         ).save()
         user_info = User.objects.get(kakaoId=kakaoId)
-        encoded_jwt = jwt.encode({'id': user_info.kakaoId}, SECRET_KEY, algorithm='HS256')  # jwt토큰 발행
+        encoded_jwt = jwt.encode({'id': user_info.kakaoId}, SECRET_KEY, algorithm='HS256')  
         return HttpResponse(f'id:{user_info.kakaoId}, token:{encoded_jwt}, exist:true')
