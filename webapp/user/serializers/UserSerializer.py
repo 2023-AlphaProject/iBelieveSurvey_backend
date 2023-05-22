@@ -6,7 +6,8 @@ from user.models import User
 class UpdateUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('realName', 'phoneNumber', 'gender', 'birth')
+        fields = ('kakaoId', 'email', 'realName', 'phoneNumber', 'gender', 'birth')
+        read_only_fields = ('kakaoId', 'email')
 
 # Serializer for User Details
 class UserViewSerializer(serializers.ModelSerializer):

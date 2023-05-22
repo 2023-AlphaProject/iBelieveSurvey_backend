@@ -7,5 +7,5 @@ from user.views.userAPIView import UpdateUserAPIView
 urlpatterns = [
     path('kakao/login',kakaoGetLogin),
     path('kakao/callback', kakaoCallback, name="kakaoCallback"),
-    path('user/update', UpdateUserAPIView.as_view()),
+    path('update', UpdateUserAPIView.as_view()),
 ]
