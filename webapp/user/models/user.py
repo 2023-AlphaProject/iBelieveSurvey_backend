@@ -40,7 +40,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
 
     email = models.CharField(
-        verbose_name="카카오 계정 이메일",
+        verbose_name="카카오 이메일",
         max_length=255,
         null=False,
         unique=True,

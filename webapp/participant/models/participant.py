@@ -37,3 +37,6 @@ class Participant(models.Model):
         verbose_name="설문 재참여 일시",
         auto_now=True,
     )
+
+    def __str__(self):
+        return self.kakaoId.realName

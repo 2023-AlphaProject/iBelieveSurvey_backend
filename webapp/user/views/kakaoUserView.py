@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+
 from config.settings.base import SOCIAL_OUTH_CONFIG
 from django.http import JsonResponse
 from rest_framework import status
@@ -18,6 +19,7 @@ def kakaoGetLogin(request):
     REDIRET_URL = SOCIAL_OUTH_CONFIG['KAKAO_REDIRECT_URI']
     url = f"https://kauth.kakao.com/oauth/authorize?client_id={CLIENT_ID}&redirect_uri={REDIRET_URL}&response_type=code"
     return redirect(url)
+
 
 @api_view(['GET'])
 @permission_classes([AllowAny, ])
