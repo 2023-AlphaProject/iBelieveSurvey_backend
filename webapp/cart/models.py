@@ -1,7 +1,7 @@
 from django.db import models
 
 from survey.models import Survey
-from template.models.template import Template
+from template.models import Template
 
 
 class Cart(models.Model):

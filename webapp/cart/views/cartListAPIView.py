@@ -4,22 +4,29 @@ from rest_framework import status
 
 from cart.models import Cart
 from cart.serializers import CartSerializer
+from survey.models import Survey
+from template.models import Template
 
 
 class CartListAPIView(APIView):
-    def get(self, request):
-        # Retrieve all cart objects for the user's surveys with is_idle=True
-        carts = Cart.objects.filter(survey__user=request.user, survey__is_idle=True)
+    def get(self, request, survey_id):
+        carts = Cart.objects.filter(survey_id=survey_id) # 해당 survey_id에 해당하는 cart 객체들을 가져옵니다.
         serializer = CartSerializer(carts, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def post(self, request):
-        # Create a new cart object for the user's survey with is_idle=True
+    def post(self, request, survey_id):
+        try:
+            survey = Survey.objects.get(pk=survey_id)
+        except Survey.DoesNotExist:
+            return Response({"error": "Survey not found"}, status=status.HTTP_404_NOT_FOUND)
+
         serializer = CartSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(survey=survey)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 # 1. 설문작성완료 = is_idle(T) / is_awarded(F) / is_ongoing(F) / is_done(F)
 # 2. 기프티콘 담으러 가자 (is_idle=True일 때 Cart객체 Retrieve 가능, Update 가능, Delete 가능)
