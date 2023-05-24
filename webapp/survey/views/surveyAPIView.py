@@ -16,7 +16,5 @@ class SurveyAPIView(CreateAPIView, ListAPIView):
     filterset_fields = ['title', 'category', 'status', 'is_paid', 'is_survey_hidden', ]
     search_fields = ['title']
 
-    # TODO: filter, permission, pagination
-
     def get_queryset(self):
         return Survey.objects.annotate(participants=Count('participant'))
