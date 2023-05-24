@@ -1,18 +1,31 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
-from user.models import User
 
 from config.baseModel import BaseModel
 from config.exceptions.handler import validate_multiple
+from user.models import User
 
 
 class Survey(BaseModel):
+    STATUS_CHOICES = (
+        ('NOT_STARTED', 'NOT_STARTED'),
+        ('IN_PROGRESS', 'IN_PROGRESS'),
+        ('END', 'END'),
+    )
+
     class Meta:
         db_table = 'survey'
         verbose_name = 'Survey'
         verbose_name_plural = 'Surveys'
         ordering = ['id']
+
+    writer = models.ForeignKey(
+        User,
+        verbose_name="설문 작성자",
+        on_delete=models.CASCADE,
+        null=True,
+    )
 
     title = models.CharField(
         verbose_name="설문 제목",
@@ -33,26 +46,21 @@ class Survey(BaseModel):
         default=1,
     )
 
-    user = models.ForeignKey(
-        User,
-        verbose_name="사용자",
-        on_delete=models.CASCADE,
-        null=True,
-    )
-
     data = models.JSONField(
         verbose_name="설문 데이터",
         null=True,
     )
 
-    is_idle = models.BooleanField(
-        verbose_name="설문 임시 저장 상태 여부",
+    status = models.CharField(
+        verbose_name="설문 상태",
+        choices=STATUS_CHOICES,
+        max_length=20,
         null=False,
-        default=True,
+        default='NOT_STARTED',
     )
 
-    is_awarded = models.BooleanField(
-        verbose_name="설문 보상 지급 완료 여부",
+    is_paid = models.BooleanField(
+        verbose_name="결제 여부",
         null=False,
         default=False,
     )
@@ -63,14 +71,14 @@ class Survey(BaseModel):
         default=False,
     )
 
-    end_at = models.DateTimeField(
-        verbose_name="설문 종료 일시",
-        null=False,
-    )
-
     started_at = models.DateTimeField(
         verbose_name="설문 시작 일시",
         null=True,
+    )
+
+    end_at = models.DateTimeField(
+        verbose_name="설문 종료 일시",
+        null=False,
     )
 
     def __str__(self):
@@ -88,21 +96,7 @@ class Survey(BaseModel):
             raise ValidationError('설문 종료 일시는 현재 시간 보다 빠를 수 없습니다.')
 
     def save(self, *args, **kwargs):
-        if self.started_at is None and self.is_idle is False:
+        if self.started_at is None and self.is_paid:
             self.started_at = timezone.now()
         self.clean()
         super().save(*args, **kwargs)
-
-    @property
-    def is_ongoing(self):
-        if self.started_at is None:
-            return False
-        return timezone.now() <= self.end_at
-
-    @property
-    def is_done(self):
-        if self.end_at < timezone.now() and not self.is_idle:
-            return True
-        return False
-
-    # TODO: is_awarded 로직 추가
