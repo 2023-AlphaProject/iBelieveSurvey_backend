@@ -10,7 +10,10 @@ class Cart(models.Model):
         verbose_name = "Cart"
         verbose_name_plural = "Carts"
 
-    survey = models.ForeignKey(Survey, verbose_name="설문", on_delete=models.CASCADE, null=False)
-    template = models.ForeignKey(Template, verbose_name="템플릿", on_delete=models.CASCADE, null=False)
+    survey = models.ForeignKey(Survey, verbose_name="설문", on_delete=models.CASCADE, null=False, related_name="survey_set")
+    template = models.ForeignKey(Template, verbose_name="템플릿", on_delete=models.CASCADE, null=False, related_name="template_set")
     quantity = models.IntegerField(verbose_name="상품 수량", null=False)
+
+    def __str__(self):
+        return self.survey.title
 
