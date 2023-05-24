@@ -1,3 +1,4 @@
+from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -6,11 +7,11 @@ from cart.serializers import CartSerializer
 
 
 class CartDetailAPIView(APIView):
-    def get_object(self, cart_id):
+    def get_object(self, pk):
         try:
-            return Cart.objects.get(id=cart_id)
+            return Cart.objects.get(id=pk)
         except Cart.DoesNotExist:
-            raise
+            raise NotFound("장바구니가 존재하지 않습니다.")
 
     def get(self, request, survey_id, cart_id):
         cart = self.get_object(cart_id)
