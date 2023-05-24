@@ -8,6 +8,7 @@ from survey.serializers import SurveyRetrieveSerializer, SurveySerializer
 
 class SurveyRetrieveUpdateDestoryAPIView(RetrieveUpdateDestroyAPIView):
     queryset = Survey.objects.all()
+    lookup_url_kwarg = 'survey_id'
 
     def get_serializer_class(self):
         if getattr(self, 'swagger_fake_view', False):
