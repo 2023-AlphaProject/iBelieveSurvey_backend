@@ -10,27 +10,26 @@ class SurveyRetrieveSerializer(serializers.ModelSerializer):
         model = Survey
         fields = [
             'id',
+            'writer',
             'title',
             'thumbnail',
             'category',
+            'status',
+            'is_paid',
             'started_at',
             'end_at',
-            'is_idle',
-            'is_ongoing',
-            'is_done',
-            'is_awarded',
             'is_survey_hidden',
-            'created_at',
             'data',
             'participants',
+            'created_at',
         ]
         read_only_fields = [
-            'created_at',
-            'is_idle',
-            'is_awarded',
-            'is_ongoing',
-            'is_done',
+            'writer',
+            'status',
+            'is_paid',
             'started_at',
+            'end_at',
+            'created_at',
             'participants',
         ]
 
