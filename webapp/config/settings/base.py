@@ -58,6 +58,7 @@ USER_APPS = [
     'cart',
     'order',
     'template',
+    'payment',
 ]
 
 INSTALLED_APPS = DEFAULT_APPS + USER_APPS

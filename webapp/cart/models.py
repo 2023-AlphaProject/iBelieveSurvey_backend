@@ -14,6 +14,9 @@ class Cart(models.Model):
     template = models.ForeignKey(Template, verbose_name="템플릿", on_delete=models.CASCADE, null=False, related_name="template_set")
     quantity = models.IntegerField(verbose_name="상품 수량", null=False)
 
+    @property
+    def total_price(self):
+        return self.template.product_price * self.quantity
+      
     def __str__(self):
         return self.survey.title
-

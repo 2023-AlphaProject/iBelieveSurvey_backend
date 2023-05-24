@@ -544,3 +544,6 @@ $RECYCLE.BIN/
 
 # secret key
 secrets.json
+
+.vscode
+/log
