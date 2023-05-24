@@ -5,4 +5,4 @@ from participant.models import Participant
 
 @admin.register(Participant)
 class ParticipantAdmin(admin.ModelAdmin):
-    list_display = ('id', 'kakaoId', 'survey', 'json',)
+    list_display = ('id', 'user', 'survey', 'json',)

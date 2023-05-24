@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from cart.models import cart
+from cart.models import Cart
 from survey.models import Survey
 
 
