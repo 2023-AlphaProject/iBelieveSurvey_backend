@@ -11,7 +11,7 @@ class CartDetailAPIView(APIView):
         try:
             return Cart.objects.get(id=pk)
         except Cart.DoesNotExist:
-            raise NotFound("장바구니가 존재하지 않습니다.")
+            raise Response({"error":"장바구니가 존재하지 않습니다."})
 
     def get(self, request, survey_id, cart_id):
         cart = self.get_object(cart_id)
@@ -31,7 +31,7 @@ class CartDetailAPIView(APIView):
         cart.delete()
         return Response(status=204)
 
-# 1. 설문작성완료 = survey객체의 상태를 의미하는 일부 필드들은 다음과 같다. is_idle(T) / is_awarded(F) / is_ongoing(F) / is_done(F)
+# 1. 설문작성완료 = survey객체의 상태를 의미하는 필드들은 다음과 같다. is_idle(T) / is_awarded(F) / is_ongoing(F) / is_done(F)
 # 2. 설문작성완료했으니 기프티콘을 장바구니에 담자
 # 3. 내가 담을 수 있는 템플릿의 목록들을 보여줘 : db에 저장된 template객체들 모두 가져오면 됨
 # 카트 객체는 내가 만든 설문에 대해서만 list, post, retrieve, update, delete 될 수 있다.

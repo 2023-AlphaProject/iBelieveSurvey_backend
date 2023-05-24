@@ -39,7 +39,6 @@ urlpatterns = [
     path('user/', include('user.urls'), name='users'),
     path('templates/', include('template.urls'), name='templates'),
     path('surveys/', include('survey.urls'), name='surveys'),
-    path('surveys/<int:survey_id>/carts/', include('cart.urls'), name='carts')
 ]
 
 
