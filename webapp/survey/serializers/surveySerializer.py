@@ -14,8 +14,10 @@ class SurveySerializer(serializers.ModelSerializer):
             'title',
             'thumbnail',
             'category',
-            'status',
+            'is_idle',
             'is_paid',
+            'is_ongoing',
+            'is_end',
             'started_at',
             'end_at',
             'is_survey_hidden',
@@ -24,13 +26,13 @@ class SurveySerializer(serializers.ModelSerializer):
         ]
 
         read_only_fields = [
-            'created_at',
-            'started_at',
-            'data',
-            'writer',
-            'status',
+            'is_idle',
             'is_paid',
+            'is_ongoing',
+            'is_end',
+            'started_at',
             'participants',
+            'created_at',
         ]
 
     def get_participants(self, obj):
