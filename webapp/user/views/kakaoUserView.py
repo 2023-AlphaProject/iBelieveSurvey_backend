@@ -56,7 +56,7 @@ def kakaoCallback(request):
         encoded_jwt = jwt.encode({'id': user_info.kakaoId}, SECRET_KEY, algorithm='HS256')  # jwt토큰 발행
         return HttpResponse(f'id:{user_info.kakaoId}, token:{encoded_jwt}, exist:true')
 
-    # 저장되어 있지 않다면 회원가입
+    # 저장되어 있지 않다면 회원가
     else:
         User(
             kakaoId = kakaoId,
@@ -65,3 +65,14 @@ def kakaoCallback(request):
         user_info = User.objects.get(kakaoId=kakaoId)
         encoded_jwt = jwt.encode({'id': user_info.kakaoId}, SECRET_KEY, algorithm='HS256')  
         return HttpResponse(f'id:{user_info.kakaoId}, token:{encoded_jwt}, exist:true')
+    
+# @api_view(['POST'])
+# @permission_classes([AllowAny, ])
+# def logout(self,request):
+#         res = Response()
+#         res.delete_cookie('encoded_jwt')
+#         res.data = {
+#             "message" : 'success'
+#         }
+#         return res
+

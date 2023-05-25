@@ -1,7 +1,6 @@
 from django.urls import path
 
-from user.views.kakaoUserView import kakaoCallback
-from user.views.kakaoUserView import kakaoGetLogin
+from user.views.kakaoUserView import kakaoCallback,kakaoGetLogin
 from user.views.userAPIView import UpdateUserAPIView
 
 urlpatterns = [
