@@ -8,12 +8,6 @@ from user.models import User
 
 
 class Survey(BaseModel):
-    STATUS_CHOICES = (
-        ('NOT_STARTED', 'NOT_STARTED'),
-        ('IN_PROGRESS', 'IN_PROGRESS'),
-        ('END', 'END'),
-    )
-
     class Meta:
         db_table = 'survey'
         verbose_name = 'Survey'
@@ -36,6 +30,7 @@ class Survey(BaseModel):
     thumbnail = models.URLField(
         verbose_name="설문 썸네일",
         max_length=255,
+        null=True,
     )
 
     category = models.ForeignKey(
@@ -51,12 +46,10 @@ class Survey(BaseModel):
         null=True,
     )
 
-    status = models.CharField(
-        verbose_name="설문 상태",
-        choices=STATUS_CHOICES,
-        max_length=20,
+    is_idle = models.BooleanField(
+        verbose_name="임시 저장 여부",
         null=False,
-        default='NOT_STARTED',
+        default=True,
     )
 
     is_paid = models.BooleanField(
@@ -78,8 +71,20 @@ class Survey(BaseModel):
 
     end_at = models.DateTimeField(
         verbose_name="설문 종료 일시",
-        null=False,
+        null=True,
     )
+
+    @property
+    def is_ongoing(self):
+        if self.started_at is None or self.end_at is None:
+            return False
+        return self.started_at is not None and self.started_at <= timezone.now() and self.end_at >= timezone.now()
+
+    @property
+    def is_end(self):
+        if self.end_at is None:
+            return False
+        return self.end_at < timezone.now()
 
     def __str__(self):
         return self.title
@@ -90,13 +95,11 @@ class Survey(BaseModel):
         )
 
     def validate_end_at_field(self):
-        if self.started_at is not None and self.started_at > self.end_at:
+        if self.started_at is not None and self.end_at is not None and self.started_at > self.end_at:
             raise ValidationError('설문 종료 일시는 설문 시작 일시보다 빠를 수 없습니다.')
-        if timezone.now() > self.end_at:
+        if self.end_at is not None and timezone.now() > self.end_at:
             raise ValidationError('설문 종료 일시는 현재 시간 보다 빠를 수 없습니다.')
 
     def save(self, *args, **kwargs):
-        if self.started_at is None and self.is_paid:
-            self.started_at = timezone.now()
         self.clean()
         super().save(*args, **kwargs)

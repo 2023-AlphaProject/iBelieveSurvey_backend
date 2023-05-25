@@ -21,7 +21,7 @@ class CartListAPIView(APIView):
             return Response({'error': '해당 설문은 존재하지 않습니다.'}, status=status.HTTP_404_NOT_FOUND)
 
         # 해당 Survey의 user 필드와 현재 요청의 사용자 비교
-        if survey.user != request.user:
+        if survey.writer != request.user:
             return Response({'error': '해당 설문에 대한 장바구니 생성이 인가되지 않았습니다.'},
                             status=status.HTTP_403_FORBIDDEN)
 

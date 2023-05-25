@@ -5,11 +5,15 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from cart.models import Cart
+from survey.models import Survey
 
 
 class KakaoPayAPI(APIView):
 
     def post(self, request, survey_id):
+        survey = Survey.objects.get(id=survey_id)
+        if survey.end_at is None:
+            return Response({'error': '설문 종료 일시가 설정되지 않았습니다.'}, status=400)
         carts = Cart.objects.filter(survey_id=survey_id)
         total_amount = 0
         for cart in carts:
