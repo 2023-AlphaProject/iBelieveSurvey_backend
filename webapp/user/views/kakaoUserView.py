@@ -51,32 +51,6 @@ def kakaoCallback(request):
     if email is None:
         return JsonResponse({'err_msg': 'failed to get email'}, status=status.HTTP_400_BAD_REQUEST)
 
-
-
-
-    # # parsing
-
-    # if User.objects.filter(email=email).exists():
-    #     user = User.objects.get(email=email)
-    #     print('login')
-    # else:
-    #     user = User.objects.create(
-    # 	   email=email,
-    #     )
-    #     user.save()
-    # payload = JWT_PAYLOAD_HANDLER(user)
-    # jwt_token = JWT_ENCODE_HANDLER(payload)
-    # response = {
-    #     'success' : True, 
-    #     'token' : jwt_token
-    # }
-    # return Response(response, status=200)
-
-    # # return JsonResponse({"user_info": user_info_response.json()})
-
-
-
-
     # 관리자가(employee) 기존에 카카오톡 계정이 DB에 저장되어 있는지 확인
     if User.objects.filter(kakaoId=kakaoId).exists():  # 지금 접속한 카카오 아이디가 데이터베이스에 존재하는지 확인
         user_info = User.objects.get(kakaoId=kakaoId)  # 존재하는 카카오 아이디를 가진 유저 객체를 가져옴
