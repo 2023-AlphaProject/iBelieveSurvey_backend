@@ -22,12 +22,17 @@ class UserManager(BaseUserManager):
         kwargs.setdefault('is_superuser', True)
         kwargs.setdefault('realName', 'root')
         kwargs.setdefault('phoneNumber', '010-0000-0000')
-        kwargs.setdefault('gender', True)
-        kwargs.setdefault('birth', '1900-01-01')
+        kwargs.setdefault('gender', 'male')
+        kwargs.setdefault('birthyear', '1900')
         self._create_user(email, password, **kwargs)
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    STATUS_CHOICES = (
+        ('female', 'female'),
+        ('male', 'male'),
+    )
+
     class Meta:
         db_table = 'user'
         verbose_name = 'User'
@@ -58,14 +63,17 @@ class User(AbstractBaseUser, PermissionsMixin):
         null=True,
     )
 
-    gender = models.BooleanField(
+    gender = models.CharField(
         verbose_name="성별",
+        choices=STATUS_CHOICES,
+        max_length=10,
+        default='male',
         null=True,
     )
 
-    birth = models.DateField(
-        verbose_name="생년월일",
-        max_length=20,
+    birthyear = models.CharField(
+        verbose_name="출생연도",
+        max_length=4,
         null=True,
     )
 
