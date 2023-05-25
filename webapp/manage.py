@@ -2,6 +2,7 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+import warnings
 
 import dotenv
 
@@ -21,5 +22,6 @@ def main():
 
 
 if __name__ == "__main__":
+    warnings.filterwarnings("ignore", category=SyntaxWarning, module="dotenv")
     dotenv.read_dotenv()
     main()
