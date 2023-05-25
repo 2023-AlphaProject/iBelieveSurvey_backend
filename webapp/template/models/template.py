@@ -12,10 +12,12 @@ class Template(models.Model):
         verbose_name = "Template"
         verbose_name_plural = "Templates"
 
-    template_token = models.CharField(max_length=200, verbose_name="템플릿 토큰", null=True)  # 일단 null=True로 저장한 이후에 token 대입
+    template_token = models.CharField(max_length=200, verbose_name="템플릿 토큰",
+                                      null=True)  # 일단 null=True로 저장한 이후에 token 대입
     template_name = models.CharField(max_length=100, verbose_name="템플릿명", null=False)
     template_trace_id = models.BigIntegerField(verbose_name="템플릿 ID", null=False)
-    order_template_status = models.CharField(max_length=100, verbose_name="템플릿 상태", null=False)  # REGISTERED, ALIVE, EXPIRED, CLOSED
+    order_template_status = models.CharField(max_length=100, verbose_name="템플릿 상태",
+                                             null=False)  # REGISTERED, ALIVE, EXPIRED, CLOSED
     budget_type = models.CharField(max_length=100, verbose_name="한도 타입", null=False)  # UNLIMITED, LIMITED
     gift_sent_count = models.PositiveIntegerField(verbose_name="기발송 수", null=False)
     bm_sender_name = models.CharField(max_length=100, verbose_name="발신자 명", null=False)
@@ -31,6 +33,7 @@ class Template(models.Model):
 
     def __str__(self):
         return self.template_name
+
 
 @receiver(pre_save, sender=Template)
 def hash_template_token(sender, instance, **kwargs):

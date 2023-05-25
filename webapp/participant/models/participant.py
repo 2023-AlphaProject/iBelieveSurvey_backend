@@ -9,7 +9,7 @@ class Participant(models.Model):
         verbose_name = 'participant'
         verbose_name_plural = 'participants'
 
-    kakaoId = models.ForeignKey(
+    user = models.ForeignKey(
         User,
         verbose_name="설문 참여자",
         on_delete=models.CASCADE,
@@ -39,4 +39,4 @@ class Participant(models.Model):
     )
 
     def __str__(self):
-        return self.kakaoId.realName
+        return self.user.realName

@@ -1,4 +1,3 @@
-from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -11,7 +10,7 @@ class CartDetailAPIView(APIView):
         try:
             return Cart.objects.get(id=pk)
         except Cart.DoesNotExist:
-            raise Response({"error":"장바구니가 존재하지 않습니다."})
+            return Response({"error": "장바구니가 존재하지 않습니다."})
 
     def get(self, request, survey_id, cart_id):
         cart = self.get_object(cart_id)

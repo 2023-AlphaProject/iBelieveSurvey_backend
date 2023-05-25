@@ -24,7 +24,7 @@ class Survey(BaseModel):
         User,
         verbose_name="설문 작성자",
         on_delete=models.CASCADE,
-        null=True,
+        null=False,
     )
 
     title = models.CharField(
