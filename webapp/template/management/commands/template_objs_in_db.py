@@ -1,14 +1,13 @@
+import django
 import os
+import requests
+
+from django.core.management.base import BaseCommand
+
+from template.models import Template
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
-
-import django
-
 django.setup()
-
-import requests
-from django.core.management.base import BaseCommand
-from template.models import Template
 
 script_absol_dir = os.path.dirname(os.path.abspath(__file__))
 env_absol_dir = os.path.join(script_absol_dir, '../../../.env')

@@ -29,14 +29,10 @@ class KakaoPayAPI(APIView):
             'quantity': 1,
             'total_amount': total_amount,
             'tax_free_amount': 0,
-            'approval_url': 'http://localhost',
+            'approval_url': f'http://localhost/surveys/{survey_id}/carts/payments/success',
             'fail_url': 'http://localhost',
             'cancel_url': 'http://localhost',
         }
         response = requests.post(url, headers=headers, params=params)
-        # if response.status_code == 200:
-        #     survey = Survey.objects.get(id=survey_id)
-        #     survey.is_paid = True
-        #     survey.save()
         result = response.json()
         return Response(result)

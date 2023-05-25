@@ -10,10 +10,10 @@ class CartAdmin(admin.ModelAdmin):
         form = super().get_form(request, obj, **kwargs)
 
         if obj is None:  # post
-            form.base_fields['survey'].queryset = Survey.objects.filter(user=request.user)
+            form.base_fields['survey'].queryset = Survey.objects.filter(writer=request.user)
         else:  # update
-            if obj.survey.user == request.user and obj.survey.is_idle:
-                form.base_fields['survey'].queryset = Survey.objects.filter(user=request.user)
+            if obj.survey.writer == request.user and obj.survey.status == 'NOT_STARTED':
+                form.base_fields['survey'].queryset = Survey.objects.filter(writer=request.user)
             else:
                 form.base_fields['survey'].disabled = True
                 form.base_fields['template'].disabled = True
@@ -22,11 +22,10 @@ class CartAdmin(admin.ModelAdmin):
         return form
 
     def has_delete_permission(self, request, obj=None):
-        if obj is not None and obj.survey.user == request.user:
+        if obj is not None and obj.survey.writer == request.user:
             return True
         else:
             return False
-
 
 # survery객체 생성되는 시점 (survey객체 임시저장)
 # is_idle=True, is_awarded=False, is_ongoing=False, is_done=False.
