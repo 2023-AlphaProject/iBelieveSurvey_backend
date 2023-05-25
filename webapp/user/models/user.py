@@ -28,6 +28,11 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    STATUS_CHOICES = (
+        ('female', 'female'),
+        ('male', 'male'),
+    )
+
     class Meta:
         db_table = 'user'
         verbose_name = 'User'
@@ -58,12 +63,15 @@ class User(AbstractBaseUser, PermissionsMixin):
         null=True,
     )
 
-    gender = models.BooleanField(
+    gender = models.CharField(
         verbose_name="성별",
+        choices=STATUS_CHOICES,
+        max_length=10,
+        default='male',
         null=True,
     )
 
-    birth = models.DateField(
+    birthyear = models.DateField(
         verbose_name="생년월일",
         max_length=20,
         null=True,
