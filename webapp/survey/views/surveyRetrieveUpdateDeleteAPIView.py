@@ -15,7 +15,7 @@ class SurveyRetrieveUpdateDestoryAPIView(RetrieveUpdateDestroyAPIView):
 
         instance = self.get_object()
         HIDDEN_END_SURVEY = instance.is_survey_hidden and instance.status == Survey.STATUS_CHOICES.END
-        NOT_STARTED_SURVEY = instance.status == Survey.STATUS_CHOICES.NOT_STARTED
+        NOT_STARTED_SURVEY = instance.status == Survey.STATUS_CHOICES.NOT_STARTED # error
 
         if HIDDEN_END_SURVEY or NOT_STARTED_SURVEY:
             return SurveySerializer

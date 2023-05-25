@@ -6,27 +6,29 @@ from cart.serializers import CartSerializer
 
 
 class CartDetailAPIView(APIView):
-    def get_object(self, pk):
+    pk_url_kwarg = 'uuid'
+
+    def get_object(self, uuid):
         try:
-            return Cart.objects.get(id=pk)
+            return Cart.objects.get(uuid=uuid)
         except Cart.DoesNotExist:
             return Response({"error": "장바구니가 존재하지 않습니다."})
 
-    def get(self, request, survey_id, cart_id):
-        cart = self.get_object(cart_id)
+    def get(self, request, survey_id, uuid):
+        cart = self.get_object(uuid)
         serializer = CartSerializer(cart)
         return Response(serializer.data)
 
-    def put(self, request, survey_id, cart_id):
-        cart = self.get_object(cart_id)
+    def put(self, request, survey_id, uuid):
+        cart = self.get_object(uuid)
         serializer = CartSerializer(cart, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=400)
 
-    def delete(self, request, survey_id, cart_id):
-        cart = self.get_object(cart_id)
+    def delete(self, request, survey_id, uuid):
+        cart = self.get_object(uuid)
         cart.delete()
         return Response(status=204)
 

@@ -1,4 +1,5 @@
 from django.contrib import admin
+from rest_framework.response import Response
 
 from cart.models import Cart
 from survey.models import Survey
@@ -10,16 +11,25 @@ class CartAdmin(admin.ModelAdmin):
         form = super().get_form(request, obj, **kwargs)
 
         if obj is None:  # post
+            form.base_fields['uuid'].disabled = True
             form.base_fields['survey'].queryset = Survey.objects.filter(writer=request.user)
+
         else:  # update
             if obj.survey.writer == request.user and obj.survey.status == 'NOT_STARTED':
+                form.base_fields['uuid'].disabled = True
                 form.base_fields['survey'].queryset = Survey.objects.filter(writer=request.user)
             else:
+                form.base_fields['uuid'].disabled = True
                 form.base_fields['survey'].disabled = True
                 form.base_fields['template'].disabled = True
                 form.base_fields['quantity'].disabled = True
 
+
         return form
+
+
+
+
 
     def has_delete_permission(self, request, obj=None):
         if obj is not None and obj.survey.writer == request.user:
