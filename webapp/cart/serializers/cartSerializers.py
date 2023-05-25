@@ -6,5 +6,5 @@ from cart.models import Cart
 class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
-        fields = ["id", "survey", "template", "quantity"]
+        fields = ["uuid", "survey", "template", "quantity"]
         depth = 1
