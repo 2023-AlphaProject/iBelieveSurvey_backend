@@ -13,7 +13,7 @@ class SurveyAPIView(CreateAPIView, ListAPIView):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     ordering = ['id']
     ordering_fields = ['started_at', 'end_at', 'participants', ]
-    filterset_fields = ['title', 'category', 'status', 'is_paid', 'is_survey_hidden', ]
+    filterset_fields = ['title', 'category', 'is_paid', 'is_survey_hidden', ]
     search_fields = ['title']
 
     def get_queryset(self):

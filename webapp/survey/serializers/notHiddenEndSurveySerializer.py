@@ -3,7 +3,7 @@ from rest_framework import serializers
 from survey.models import Survey
 
 
-class SurveyRetrieveSerializer(serializers.ModelSerializer):
+class NotHiddenEndSurveySerializer(serializers.ModelSerializer):
     participants = serializers.SerializerMethodField()
 
     class Meta:
@@ -20,21 +20,27 @@ class SurveyRetrieveSerializer(serializers.ModelSerializer):
             'is_end',
             'started_at',
             'end_at',
-            'is_survey_hidden',
             'data',
+            'is_survey_hidden',
             'participants',
             'created_at',
         ]
         read_only_fields = [
+            'id',
             'writer',
+            'title',
+            'thumbnail',
+            'category',
             'is_idle',
             'is_paid',
             'is_ongoing',
             'is_end',
             'started_at',
             'end_at',
-            'created_at',
+            'data',
+            'is_survey_hidden',
             'participants',
+            'created_at',
         ]
 
     def get_participants(self, obj):

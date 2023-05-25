@@ -2,7 +2,7 @@ from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
 
 from survey.models import Survey
-from survey.serializers import SurveyRetrieveSerializer, SurveySerializer
+from survey.serializers import *
 
 
 class SurveyRetrieveUpdateDestoryAPIView(RetrieveUpdateDestroyAPIView):
@@ -14,18 +14,24 @@ class SurveyRetrieveUpdateDestoryAPIView(RetrieveUpdateDestroyAPIView):
             return SurveySerializer
 
         instance = self.get_object()
-        HIDDEN_END_SURVEY = instance.is_survey_hidden and instance.status == Survey.STATUS_CHOICES.END
-        NOT_STARTED_SURVEY = instance.status == Survey.STATUS_CHOICES.NOT_STARTED # error
 
-        if HIDDEN_END_SURVEY or NOT_STARTED_SURVEY:
-            return SurveySerializer
-        else:
+        HIDDEN_END_SURVEY = instance.is_survey_hidden and instance.is_end
+        NOT_HIDDEN_END_SURVEY = not instance.is_survey_hidden and instance.is_end
+        NOT_STARTED_SURVEY = instance.is_idle
+
+        if NOT_STARTED_SURVEY:
             return SurveyRetrieveSerializer
+        elif HIDDEN_END_SURVEY:
+            return HiddenEndSurveySerializer
+        elif NOT_HIDDEN_END_SURVEY:
+            return NotHiddenEndSurveySerializer
+        else:
+            return SurveySerializer
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
-        if not instance.status == Survey.STATUS_CHOICES.NOT_STARTED:
+        if not instance.is_idle:
             return Response({'error': '설문이 진행중이거나 종료되어서 수정할 수 없습니다.'}, status=400)
 
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
@@ -41,6 +47,6 @@ class SurveyRetrieveUpdateDestoryAPIView(RetrieveUpdateDestroyAPIView):
 
     def delete(self, request, *args, **kwargs):
         instance = self.get_object()
-        if not instance.status == Survey.STATUS_CHOICES.NOT_STARTED:
+        if not instance.is_idle:
             return Response({'error': '설문이 진행중이거나 종료되어서 삭제할 수 없습니다.'}, status=400)
         return self.destroy(request, *args, **kwargs)
