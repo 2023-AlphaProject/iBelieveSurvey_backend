@@ -36,6 +36,7 @@ class Survey(BaseModel):
     thumbnail = models.URLField(
         verbose_name="설문 썸네일",
         max_length=255,
+        null=True,
     )
 
     category = models.ForeignKey(
@@ -96,7 +97,5 @@ class Survey(BaseModel):
             raise ValidationError('설문 종료 일시는 현재 시간 보다 빠를 수 없습니다.')
 
     def save(self, *args, **kwargs):
-        if self.started_at is None and self.is_paid:
-            self.started_at = timezone.now()
         self.clean()
         super().save(*args, **kwargs)
