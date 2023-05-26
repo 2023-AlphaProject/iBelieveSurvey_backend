@@ -1,6 +1,10 @@
+import json
+
 from django.db import models
-from user.models import User
+from rest_framework.response import Response
+
 from survey.models import Survey
+from user.models import User
 
 
 class Participant(models.Model):
@@ -40,3 +44,52 @@ class Participant(models.Model):
 
     def __str__(self):
         return self.user.realName
+
+    # json필드를 파싱하여 문자열 길이 계산
+    @property
+    def json_len_count(self):
+        total_length = 0
+
+        # JSON 데이터를 파싱하여 문자열 길이 계산
+        try:
+            data = json.loads(self.json)
+            for value in data.values():
+                if isinstance(value, str):
+                    total_length += len(value)
+        except json.JSONDecodeError:
+            # JSON 파싱 에러 처리
+            pass
+
+        return total_length
+
+    # json필드를 파싱하여 5자 이상의 문자열 반복 횟수 계산
+    @property
+    def json_duplication_count(self):
+        duplication_count = 0
+        string_counts = {}
+
+        # json필드를 파싱하여 문자열 반복 횟수 계산
+        try:
+            data = json.loads(self.json)
+            for value in data.values():
+                if isinstance(value, str) and len(value) >= 5:
+                    # 문자열 길이가 5 이상인 경우만 처리
+                    if value in string_counts:
+                        string_counts[value] += 1
+                    else:
+                        string_counts[value] = 1
+
+            # 5자 이상 반복되는 문자열의 횟수 세기
+            for count in string_counts.values():
+                if count > 1:
+                    duplication_count += 1
+        except json.JSONDecodeError:
+            # JSON 파싱 에러 처리
+            return Response({"error": "설문 응답(JSON)를 파싱할 수 없습니다."})
+
+        return duplication_count
+
+    # 설문응답의 정성도의 기준
+    @property
+    def json_quality_standard(self):
+        return self.json_len_count - self.json_duplication_count
