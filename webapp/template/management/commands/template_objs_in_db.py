@@ -13,9 +13,9 @@ script_absol_dir = os.path.dirname(os.path.abspath(__file__))
 env_absol_dir = os.path.join(script_absol_dir, '../../../.env')
 
 product_detail_url_list = [
-    {'공차 밀크티': 'https://gift.kakao.com/product/6881256'},
-    {'할리스 에스프레소': 'https://gift.kakao.com/product/4653370'},
-    {'투썸플레이스 아메리카노': 'https://gift.kakao.com/product/4072511'},
+    {'공차 밀크티': '6881256'},
+    {'할리스 에스프레소': '4653370'},
+    {'투썸플레이스 아메리카노': '4072511'},
 ]
 template_token_list = []
 template_num_in_env = 3
@@ -103,7 +103,7 @@ class Command(BaseCommand):
                     template_token_list, product_detail_url_list):
 
                 if template_name in template_token_list_dict and product_detail_url_list_dict:
-                    product_detail_url = product_detail_url_list_dict[template_name]
+                    product_detail_url = "https://gift.kakao.com/product/" + product_detail_url_list_dict[template_name]
 
                     template_token = template_token_list_dict[template_name]
 

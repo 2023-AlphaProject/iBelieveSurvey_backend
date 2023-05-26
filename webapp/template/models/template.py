@@ -48,8 +48,8 @@ class Template(models.Model):
     )  # UNLIMITED, LIMITED
 
     gift_sent_count = models.PositiveIntegerField(
-        verbose_name="기발송 수",
-        null=False
+        verbose_name="보낸 템플릿 개수",
+        null=False,
     )
 
     bm_sender_name = models.CharField(
