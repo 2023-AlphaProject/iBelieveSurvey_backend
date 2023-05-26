@@ -58,7 +58,7 @@ class Participant(models.Model):
                     total_length += len(value)
         except json.JSONDecodeError:
             # JSON 파싱 에러 처리
-            pass
+            return Response({"error": "설문 응답(JSON)를 파싱할 수 없습니다."})
 
         return total_length
 
