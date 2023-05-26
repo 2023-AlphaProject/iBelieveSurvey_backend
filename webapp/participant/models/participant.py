@@ -92,4 +92,4 @@ class Participant(models.Model):
     # 설문응답의 정성도의 기준
     @property
     def json_quality_standard(self):
-        return self.json_len_count - self.json_duplication_count
+        return (self.json_duplication_count / self.json_len_count) * 100
