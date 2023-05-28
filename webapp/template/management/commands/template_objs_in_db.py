@@ -1,7 +1,7 @@
-import django
 import os
-import requests
 
+import django
+import requests
 from django.core.management.base import BaseCommand
 
 from template.models import Template
@@ -12,6 +12,11 @@ django.setup()
 script_absol_dir = os.path.dirname(os.path.abspath(__file__))
 env_absol_dir = os.path.join(script_absol_dir, '../../../.env')
 
+product_detail_url_list = [
+    {'공차 밀크티': '6881256'},
+    {'할리스 에스프레소': '4653370'},
+    {'투썸플레이스 아메리카노': '4072511'},
+]
 template_token_list = []
 template_num_in_env = 3
 
@@ -65,7 +70,7 @@ class Command(BaseCommand):
         response = requests.get(url, headers=headers)
         json_data = response.json()
         total_count = json_data["totalCount"]
-        templates = json_data["contents"]
+        templates = json_data["contents"]  # list
 
         if Template.objects.exists():
 
@@ -94,9 +99,12 @@ class Command(BaseCommand):
             template = templates[n]
             template_name = template["template_name"]
 
-            for template_token_list_dict in template_token_list:
+            for template_token_list_dict, product_detail_url_list_dict in zip(
+                    template_token_list, product_detail_url_list):
 
-                if template_name in template_token_list_dict:
+                if template_name in template_token_list_dict and product_detail_url_list_dict:
+                    product_detail_url = "https://gift.kakao.com/product/" + product_detail_url_list_dict[template_name]
+
                     template_token = template_token_list_dict[template_name]
 
                     template_trace_id = template["template_trace_id"]
@@ -117,7 +125,8 @@ class Command(BaseCommand):
                     brand_image_url = product_data["brand_image_url"]
                     product_price = product_data["product_price"]
 
-                    new_template = Template(template_token=template_token, template_name=template_name,
+                    new_template = Template(product_detail_url=product_detail_url,
+                                            template_token=template_token, template_name=template_name,
                                             template_trace_id=template_trace_id,
                                             order_template_status=order_template_status,
                                             budget_type=budget_type, gift_sent_count=gift_sent_count,
