@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from participant.models import Participant
-from participant.permissions.DetailViewPermission import ParticipantPermission
+from participant.permissions.writerPermission import ParticipantPermission
 from participant.serializers.participantSerializer import ParticipantSerializer
 
 

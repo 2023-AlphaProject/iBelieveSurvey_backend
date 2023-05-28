@@ -4,7 +4,7 @@ from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 
 from participant.models.participant import Participant
-from participant.permissions.ListViewPermission import WriterPermission
+from participant.permissions.participantPermission import WriterPermission
 from participant.serializers.participantSerializer import ParticipantSerializer
 
 

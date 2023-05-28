@@ -1,2 +1,2 @@
-from .ListViewPermission import WriterPermission
-from .DetailViewPermission import ParticipantPermission
+from .participantPermission import WriterPermission
+from .writerPermission import ParticipantPermission
