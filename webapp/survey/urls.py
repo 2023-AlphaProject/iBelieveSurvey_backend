@@ -8,4 +8,5 @@ urlpatterns = [
     path('', SurveyAPIView.as_view()),
     path('<int:survey_id>/', SurveyRetrieveUpdateDestoryAPIView.as_view()),
     path('<int:survey_id>/carts/', include('cart.urls')),
+    path('<int:survey_id>/participants/', include('participant.urls')),
 ]
