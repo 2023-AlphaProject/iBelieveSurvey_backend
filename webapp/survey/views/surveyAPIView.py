@@ -19,6 +19,9 @@ class SurveyAPIView(CreateAPIView, ListAPIView):
     search_fields = ['title']
     permission_classes = [IsSurveyOwnerOrReadOnly]
 
+    def perform_create(self, serializer):
+        serializer.save(writer=self.request.user)
+
     def create(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return super().create(request, *args, **kwargs)
