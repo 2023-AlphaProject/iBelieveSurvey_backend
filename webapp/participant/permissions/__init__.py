@@ -1,2 +1,2 @@
-from .participantPermission import WriterPermission
-from .writerPermission import ParticipantPermission
+from .writerPermission import WriterPermission
+from .participantPermission import ParticipantPermission

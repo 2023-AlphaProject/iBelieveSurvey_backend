@@ -43,7 +43,7 @@ class Participant(models.Model):
     )
 
     def __str__(self):
-        return self.user.realName
+        return self.user.email
 
     # json필드를 파싱하여 문자열 길이 계산
     @property
@@ -52,7 +52,8 @@ class Participant(models.Model):
 
         # JSON 데이터를 파싱하여 문자열 길이 계산
         try:
-            data = json.loads(self.json)
+            data = json.dumps(self.json)
+            data = json.loads(data)
             for value in data.values():
                 if isinstance(value, str):
                     total_length += len(value)
@@ -62,7 +63,7 @@ class Participant(models.Model):
 
         return total_length
 
-    # json필드를 파싱하여 5자 이상의 문자열 반복 횟수 계산
+    # json필드를 파싱하여 3,4,5자의 문자열 반복 횟수 계산
     @property
     def json_duplication_count(self):
         duplication_count = 0
@@ -70,16 +71,19 @@ class Participant(models.Model):
 
         # json필드를 파싱하여 문자열 반복 횟수 계산
         try:
-            data = json.loads(self.json)
+            data = json.dumps(self.json)
+            data = json.loads(data)
             for value in data.values():
-                if isinstance(value, str) and len(value) >= 5:
-                    # 문자열 길이가 5 이상인 경우만 처리
-                    if value in string_counts:
-                        string_counts[value] += 1
-                    else:
-                        string_counts[value] = 1
+                if isinstance(value, str) and len(value) >= 3:
+                    # 문자열 길이가 3 이상인 경우만 처리
+                    for i in range(len(value) - 2):
+                        substring = value[i:i + 3]
+                        if substring in string_counts:
+                            string_counts[substring] += 1
+                        else:
+                            string_counts[substring] = 1
 
-            # 5자 이상 반복되는 문자열의 횟수 세기
+            # 3, 4, 5자 이상 반복되는 문자열의 횟수 세기
             for count in string_counts.values():
                 if count > 1:
                     duplication_count += 1
@@ -89,7 +93,10 @@ class Participant(models.Model):
 
         return duplication_count
 
-    # 설문응답의 정성도의 기준
+    # 설문응답의 정성도의 기준 : 5자 이상의 단어의 반복 횟수 / 답변의 길이 (높을수록 답변 정성도 낮은 것으로 판단)
     @property
     def json_quality_standard(self):
-        return (self.json_duplication_count / self.json_len_count) * 100
+        try:
+            return (self.json_duplication_count / self.json_len_count) * 100
+        except ZeroDivisionError:
+            return 0
