@@ -43,7 +43,7 @@ class Participant(models.Model):
     )
 
     def __str__(self):
-        return self.user.email
+        return self.user.hidden_realName
 
     # json필드를 파싱하여 문자열 길이 계산
     @property
