@@ -1,11 +1,12 @@
 from rest_framework import filters
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from survey.models import Survey
 from participant.models import Participant
 from participant.permissions.participantPermission import ParticipantPermission
-from participant.permissions.writerPermission import WriterPermission
 from participant.serializers.participantSerializer import ParticipantSerializer
 
 
@@ -27,7 +28,6 @@ class ParticipantListAPIView(ListAPIView):
     ordering = ['id']
     queryset = Participant.objects.all()
     filter_backends = [JsonQualityStandardOrderingFilter]
-    permission_classes = [IsAuthenticated, WriterPermission]
     ordering_fields = ['json_quality_standard']
 
     def get_queryset(self):
@@ -36,13 +36,22 @@ class ParticipantListAPIView(ListAPIView):
 
         return queryset
 
-    def get_permissions(self):
-        if self.request.method == 'POST':
-            return [IsAuthenticated(), ParticipantPermission()]
-        return super().get_permissions()
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
     def post(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return Response({"error": "설문에 답변하기 위해선 로그인이 필요합니다."})
+
+        if self.request.user == self.get_survey_writer():
+            return Response({"error": "설문 작성자는 본인의 설문에 답변할 수 없습니다."})
+
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         return Response(serializer.data)
+
+    def get_survey_writer(self):
+        survey_id = self.kwargs['survey_id']
+        survey = Survey.objects.get(id=survey_id)
+        return survey.writer

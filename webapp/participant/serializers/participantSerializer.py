@@ -19,6 +19,8 @@ class ParticipantSerializer(serializers.ModelSerializer):
         ]
 
         read_only_fields = [
+            'user',
+            'survey',
             'created_at',
             'update_at',
             'json_quality_standard',
