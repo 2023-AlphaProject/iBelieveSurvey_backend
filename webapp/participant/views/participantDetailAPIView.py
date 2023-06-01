@@ -35,4 +35,4 @@ class ParticipantDetailAPIView(RetrieveAPIView, UpdateAPIView):
         if request.user != participant.user:
             return Response({"error": "설문 참여자는 본인의 답변만 수정할 수 있습니다."})
 
-        return super().update(request, *args, **kwargs)
+        return self.update(request, *args, **kwargs)
