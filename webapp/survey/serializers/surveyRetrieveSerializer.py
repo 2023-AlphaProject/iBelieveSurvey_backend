@@ -38,4 +38,7 @@ class SurveyRetrieveSerializer(serializers.ModelSerializer):
         ]
 
     def get_participants(self, obj):
-        return obj.participant_set.count()
+        try:
+            return obj.participant_set.count()
+        except AttributeError:
+            return 0
