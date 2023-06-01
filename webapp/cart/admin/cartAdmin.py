@@ -15,7 +15,7 @@ class CartAdmin(admin.ModelAdmin):
             form.base_fields['survey'].queryset = Survey.objects.filter(writer=request.user)
 
         else:  # update
-            if obj.survey.writer == request.user and obj.survey.status == 'NOT_STARTED':
+            if obj.survey.writer == request.user and obj.survey.is_idle:
                 form.base_fields['uuid'].disabled = True
                 form.base_fields['survey'].queryset = Survey.objects.filter(writer=request.user)
             else:
@@ -24,12 +24,7 @@ class CartAdmin(admin.ModelAdmin):
                 form.base_fields['template'].disabled = True
                 form.base_fields['quantity'].disabled = True
 
-
         return form
-
-
-
-
 
     def has_delete_permission(self, request, obj=None):
         if obj is not None and obj.survey.writer == request.user:
