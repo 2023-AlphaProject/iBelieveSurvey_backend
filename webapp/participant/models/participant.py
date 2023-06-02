@@ -93,10 +93,11 @@ class Participant(models.Model):
 
         return duplication_count
 
-    # 설문응답의 정성도의 기준 : 5자 이상의 단어의 반복 횟수 / 답변의 길이 (높을수록 답변 정성도 낮은 것으로 판단)
+    # 설문응답의 정성도의 기준
     @property
     def json_quality_standard(self):
         try:
-            return (self.json_duplication_count / self.json_len_count) * 100
+            return int(((self.json_duplication_count / self.json_len_count) + (
+                    self.json_len_count - self.json_duplication_count) / 100) * 10)
         except ZeroDivisionError:
             return 0
