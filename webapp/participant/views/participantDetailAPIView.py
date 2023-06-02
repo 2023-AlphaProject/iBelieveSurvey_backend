@@ -20,7 +20,7 @@ class ParticipantDetailAPIView(RetrieveAPIView, UpdateAPIView):
             return Response({"error": "설문에 답변하기 위해선 로그인이 필요합니다."})
 
         if request.user not in [participant.user, self.get_survey().writer]:
-            return Response({"error": "설문 참여자 또는 설문 답변자만 해당 설문에 대한 답변을 조회할 수 있습니다."})
+            return Response({"error": "설문 작성자 또는 설문 답변자만 해당 설문에 대한 답변을 조회할 수 있습니다."})
 
         return self.retrieve(request, *args, **kwargs)
 
@@ -32,6 +32,9 @@ class ParticipantDetailAPIView(RetrieveAPIView, UpdateAPIView):
 
         if participant is None:
             return Response({"error": "설문이 존재하지 않습니다."})
+
+        if not self.get_survey().is_ongoing:
+            return Response({"error": "설문이 진행 중이 아니므로 답변을 수정할 수 없습니다."})
 
         if request.user != participant.user:
             return Response({"error": "설문 참여자는 본인의 답변만 수정할 수 있습니다."})
