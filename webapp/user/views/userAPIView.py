@@ -2,7 +2,7 @@ from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.response import Response
 
 from user.models import User
-from user.serializers.UserSerializer import UpdateUserSerializer
+from user.serializers.userSerializer import UpdateUserSerializer
 
 
 class UpdateUserAPIView(RetrieveUpdateAPIView):
@@ -18,4 +18,3 @@ class UpdateUserAPIView(RetrieveUpdateAPIView):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return Response(serializer.data)
-       
