@@ -27,9 +27,11 @@ class CartListAPIView(ListCreateAPIView):
             return Response({"error": "장바구니에 기프티콘을 담기 위해선 로그인이 필요합니다."})
 
         # 애초에 get 예외처리에 걸리지만, 일단 예외처리함
-        survey = self.get_survey()
-        if self.request.user != survey.writer:
+        if self.request.user != self.get_survey().writer:
             return Response({"error": "설문 작성자 본인만이 해당 설문의 장바구니에 기프티콘을 담을 수 있습니다."})
+
+        if not self.get_survey().is_idle:
+            return Response({"error": "설문이 시작된 후에는 장바구니에 기프티콘을 담을 수 없습니다."})
 
         template_id = request.data.get("template")
         if template_id is None:
