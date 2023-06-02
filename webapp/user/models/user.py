@@ -90,4 +90,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def hidden_realName(self):
-        return self.realName[0] + "*" * (len(self.realName) - 2) + self.realName[-1]
+        if len(self.realName) == 2:
+            return self.realName[0] + "*"
+        else:
+            return self.realName[0] + "*" * (len(self.realName) - 2) + self.realName[-1]
