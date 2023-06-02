@@ -1,11 +1,14 @@
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from survey.models import Survey
+from survey.permissions import IsSurveyOwnerOrReadOnly
 from survey.serializers import *
 
 
 class SurveyRetrieveUpdateDestoryAPIView(RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsSurveyOwnerOrReadOnly, IsAuthenticated]
     queryset = Survey.objects.all()
     lookup_url_kwarg = 'survey_id'
 

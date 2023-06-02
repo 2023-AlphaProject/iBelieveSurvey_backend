@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from rest_framework.exceptions import NotAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import exception_handler
 
@@ -22,4 +23,6 @@ def custom_exception_handler(exc, context):
             return Response({'error': exc.error_dict}, status=400)
         if exc.message is not None:
             return Response({'error': exc.message}, status=400)
+    if isinstance(exc, NotAuthenticated):
+        return Response({'error': '해당 페이지에 대한 접근권한이 없습니다.'}, status=401)
     return exception_handler(exc, context)
