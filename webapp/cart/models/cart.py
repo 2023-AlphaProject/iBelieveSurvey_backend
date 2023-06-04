@@ -24,7 +24,6 @@ class Cart(BaseModel):
         verbose_name="설문",
         on_delete=models.CASCADE,
         null=False,
-        related_name="survey_set"
     )
 
     template = models.ForeignKey(
@@ -32,7 +31,6 @@ class Cart(BaseModel):
         verbose_name="템플릿",
         on_delete=models.CASCADE,
         null=False,
-        related_name="template_set"
     )
 
     quantity = models.PositiveIntegerField(

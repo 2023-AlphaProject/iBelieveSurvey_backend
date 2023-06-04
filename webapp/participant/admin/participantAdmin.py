@@ -6,6 +6,15 @@ from survey.models import Survey
 
 @admin.register(Participant)
 class ParticipantAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'survey', 'created_at')
+    ordering = ('id',)
+
+    def name(self, obj):
+        return obj.user.realName
+
+    def survey(self, obj):
+        return obj.survey.title
+
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
 

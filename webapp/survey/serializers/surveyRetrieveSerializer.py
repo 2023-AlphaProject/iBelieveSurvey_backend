@@ -5,6 +5,7 @@ from survey.models import Survey
 
 class SurveyRetrieveSerializer(serializers.ModelSerializer):
     participants = serializers.SerializerMethodField()
+    winningPercentage = serializers.SerializerMethodField()
 
     class Meta:
         model = Survey
@@ -24,6 +25,7 @@ class SurveyRetrieveSerializer(serializers.ModelSerializer):
             'data',
             'participants',
             'created_at',
+            'winningPercentage',
         ]
         read_only_fields = [
             'writer',
@@ -35,6 +37,7 @@ class SurveyRetrieveSerializer(serializers.ModelSerializer):
             'end_at',
             'created_at',
             'participants',
+            'winningPercentage',
         ]
 
     def get_participants(self, obj):
@@ -42,3 +45,6 @@ class SurveyRetrieveSerializer(serializers.ModelSerializer):
             return obj.participant_set.count()
         except AttributeError:
             return 0
+
+    def get_winningPercentage(self, obj):
+        return obj.winningPercentage

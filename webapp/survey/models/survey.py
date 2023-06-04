@@ -1,5 +1,7 @@
+from django.apps import apps
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models import Sum
 from django.utils import timezone
 
 from config.baseModel import BaseModel
@@ -85,6 +87,19 @@ class Survey(BaseModel):
         if self.end_at is None:
             return False
         return self.end_at < timezone.now()
+
+    @property
+    def winningPercentage(self):
+        participants = self.participant_set.count()
+        cart = apps.get_model('cart', 'Cart')
+        gifticonsCount = cart.objects.filter(survey=self).aggregate(total_quantity=Sum('quantity'))[
+            'total_quantity']
+        if participants == 0:
+            return 0
+        percentage = round(gifticonsCount / participants * 100, 3)
+        if percentage > 100:
+            return 100
+        return percentage
 
     def __str__(self):
         return self.title
