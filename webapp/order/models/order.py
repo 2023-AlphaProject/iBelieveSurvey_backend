@@ -14,7 +14,7 @@ class Order(models.Model):
 
     survey = models.ForeignKey(Survey, verbose_name="설문", on_delete=models.CASCADE, null=False)
     template = models.ForeignKey(Template, verbose_name="템플릿", on_delete=models.CASCADE, null=False)
-    receiver = models.ForeignKey(Participant, verbose_name="템플릿 수신자", on_delete=models.CASCADE, null=False)
+    receiver = models.ForeignKey(Participant, verbose_name="템플릿 수신자", on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.receiver.user.realName

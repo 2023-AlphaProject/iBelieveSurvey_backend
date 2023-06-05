@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import datetime
-import json
 import os
 from pathlib import Path
 
@@ -49,6 +48,7 @@ DEFAULT_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'corsheaders',
+    'django_crontab',
 ]
 
 USER_APPS = [
@@ -181,3 +181,5 @@ JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=28),
 }
+
+CRONJOBS = []
