@@ -33,6 +33,9 @@ class ParticipantListAPIView(ListCreateAPIView):
         return queryset
 
     def get(self, request, *args, **kwargs):
+        """
+        설문 작성자가 해당 설문에 대한 모든 답변들을 조회합니다.
+        """
         if not request.user.is_authenticated:
             return Response({"error": "해당 설문에 대한 답변들을 조회하기 위해선 로그인이 필요합니다."})
 
@@ -42,6 +45,9 @@ class ParticipantListAPIView(ListCreateAPIView):
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        """
+        설문 참여자가 해당 설문에 대한 답변을 생성합니다.
+        """
         if not self.request.user.is_authenticated:
             return Response({"error": "설문에 답변하기 위해선 로그인이 필요합니다."})
 
