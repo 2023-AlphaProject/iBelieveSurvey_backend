@@ -19,6 +19,9 @@ class CartDetailAPIView(RetrieveUpdateDestroyAPIView):
             return Response({"error": "장바구니가 존재하지 않습니다."})
 
     def get(self, request, *args, **kwargs):
+        """
+        설문 작성자가 장바구니에 담았던 특정 템플릿 묶음을 반환합니다.
+        """
         self.check_cart_exist()
 
         if not self.request.user.is_authenticated:
@@ -30,6 +33,9 @@ class CartDetailAPIView(RetrieveUpdateDestroyAPIView):
         return self.retrieve(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
+        """
+        설문 작성자가 장바구니에 담았던 특정 템플릿 묶음을 수정합니다.
+        """
         self.check_cart_exist()
 
         # 애초에 get 예외처리에 걸리지만, 일단 예외처리함
@@ -45,6 +51,9 @@ class CartDetailAPIView(RetrieveUpdateDestroyAPIView):
         return self.update(request, *args, **kwargs)
 
     def delete(self, request, *args, **kwargs):
+        """
+        설문 작성자가 장바구니에 담았던 특정 템플릿 묶음을 삭제합니다.
+        """
         self.check_cart_exist()
 
         # 애초에 get 예외처리에 걸리지만, 일단 예외처리함
