@@ -182,4 +182,6 @@ JWT_AUTH = {
     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=28),
 }
 
-CRONJOBS = []
+CRONJOBS = [
+    ('*/1 * * * *', 'config.cron.cron_test', '>> ../var/log/cron.log')
+]
