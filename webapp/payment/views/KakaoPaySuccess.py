@@ -2,9 +2,9 @@ from django.shortcuts import redirect
 from django.utils import timezone
 from rest_framework.views import APIView
 
-from cart.models import Cart
+from cart.models.cart import Cart
 from order.models.order import Order
-from survey.models import Survey
+from survey.models.survey import Survey
 
 
 class KakaoPaySuccess(APIView):
@@ -15,14 +15,11 @@ class KakaoPaySuccess(APIView):
         survey.started_at = timezone.now()
         survey.save()
 
-        existing_orders = Order.objects.filter(survey=survey).count()
-
         carts = Cart.objects.filter(survey=survey)
-
-        # 이미 order객체가 생성된 것이 없다면 모든 cart객체들의 quantity만큼 order객체들을 생성한다.
-        if existing_orders == 0:
-            for cart in carts:
+        for cart in carts:
+            existing_orders = Order.objects.filter(cart=cart).count()
+            if existing_orders == 0:
                 for _ in range(cart.quantity):
-                    Order.objects.create(survey=survey, template=cart.template, receiver=None)
+                    Order.objects.create(cart=cart, receiver=None)
 
         return redirect('http://localhost')
