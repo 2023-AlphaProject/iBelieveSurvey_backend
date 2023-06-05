@@ -8,6 +8,9 @@ ENV PYTHONUNBUFFERED 1
 
 RUN apt-get -y update
 RUN apt-get install gcc
+RUN apt-get -y install --no-install-recommends cron
+
+
 
 FROM builder as package
 
