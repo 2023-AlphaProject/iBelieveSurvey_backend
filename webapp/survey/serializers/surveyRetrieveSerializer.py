@@ -34,7 +34,6 @@ class SurveyRetrieveSerializer(serializers.ModelSerializer):
             'is_ongoing',
             'is_end',
             'started_at',
-            'end_at',
             'created_at',
             'participants',
             'winningPercentage',

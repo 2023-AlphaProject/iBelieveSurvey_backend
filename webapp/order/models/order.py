@@ -12,7 +12,10 @@ class Order(models.Model):
         verbose_name_plural = "Orders"
 
     cart = models.ForeignKey(Cart, verbose_name="장바구니", on_delete=models.CASCADE, null=False, default=None)
-    receiver = models.ForeignKey(Participant, verbose_name="템플릿 수신자", on_delete=models.CASCADE, null=True)
+    receiver = models.ForeignKey(Participant, verbose_name="템플릿 수신자", on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
-        return self.receiver.user.realName
+        if self.receiver:
+            return self.receiver.user.realName
+        else:
+            return "미정"

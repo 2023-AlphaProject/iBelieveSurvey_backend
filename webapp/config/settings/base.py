@@ -183,6 +183,6 @@ JWT_AUTH = {
 }
 
 CRONJOBS = [
-    ('*/1 * * * *', 'config.cron.cron_test', '>> ../var/log/cron.log')
-
+    # ('*/1 * * * *', 'config.cron.cron_test', '>> ../var/log/cron.log'),
+    ('*/1 * * * *', 'order.cronAssignReceiver.assignReciver', '>> ../var/log/cron.log'),
 ]
