@@ -9,3 +9,4 @@ urlpatterns = [
     path('<int:pk>/', OrderDetailAPIView.as_view()),
     path('', OrderListAPIView.as_view()),
 ]
+

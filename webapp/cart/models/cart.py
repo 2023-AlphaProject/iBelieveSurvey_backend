@@ -38,6 +38,12 @@ class Cart(BaseModel):
         null=False
     )
 
+    is_sent = models.BooleanField(
+        verbose_name = "선물 발송 여부",
+        null=False,
+        default = False,
+    )
+
     @property
     def total_price(self):
         return self.template.product_price * self.quantity

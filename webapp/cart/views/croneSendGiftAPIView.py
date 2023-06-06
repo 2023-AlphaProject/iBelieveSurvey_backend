@@ -8,20 +8,19 @@ from cart.models import Cart
 from user.models import User
 from participant.models import Participant
 
-class OrderApiView(APIView):
-    def post(self, request):
+class CroneSendGiftAPIView(APIView):
+     def post(self, request, uuid):
 
         success_callback_url = "localhost:3000" # 일단 localhost로 고정 -> 나중에 수정 필요
         fail_callback_url = "localhost:3000" # 일단 localhost로 고정 -> 나중에 수정 필요
         receiver_type = "PHONE"
 
         try:
-            # Order 모델에서 cart와 receiver 정보 가져오기
-            order = Order.objects.select_related('cart', 'receiver').get(pk=request.data['order_id'])
-            id = 0
+            # cart = Cart.objects.filter(is_sent=False)
+            order = Order.objects.filter(cart = uuid)
+            # order = Order.objects.select_related('cart', 'receiver').get(pk=request.data['order_id'])
 
             for _ in range(order.cart.quantity):
-                id+=1
                 receiver = order.receiver
                 cart = order.cart
 
@@ -31,6 +30,12 @@ class OrderApiView(APIView):
                 template = Template.objects.select_related('cart').get(template_id=template_id)
 
                 phone_number = user.phoneNumber
+                if len(phone_number)==13 and phone_number[3]=="-" and phone_number[8]=="-": # 010-1234-5678 -> 13자
+                    phone_number = user.phoneNumber
+                else:
+                    formatted_number = phone_number[:3] + '-' + phone_number[3:7] + '-' + phone_number[7:]
+                    phone_number - formatted_number
+
                 real_name = user.realName
                 template_token = template.template_token
                 template_order_name = template.template_name
@@ -46,13 +51,13 @@ class OrderApiView(APIView):
                     "success_callback_url": success_callback_url,
                     "fail_callback_url": fail_callback_url,
                     "template_order_name": template_order_name,
-                    "external_order_id": str(cart.uuid) + str(id) # 임의로 넣어놓음. 
+                    "external_order_id": str(cart.uuid) + str(order_id) 
                 }
 
                 headers = {
                     "accept": "application/json",
                     "content-type": "application/json",
-                    "Authorization": "KakaoAKf49e58b9e6f3d2cc175679f1c5534ca7"
+                    "Authorization": "KakaoAK f49e58b9e6f3d2cc175679f1c5534ca7"
                 }
 
                 # 선물 발송 API 요청 보내기

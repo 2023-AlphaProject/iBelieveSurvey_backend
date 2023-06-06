@@ -19,3 +19,4 @@ class Order(models.Model):
             return self.receiver.user.realName
         else:
             return "미정"
+
