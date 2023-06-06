@@ -1,33 +1,39 @@
+from email import header
 import requests
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from order.models import Order
 from template.models import Template
-from cart.models import Cart
 from user.models import User
-from participant.models import Participant
+from config.settings.base import SOCIAL_OUTH_CONFIG
 
 class CroneSendGiftAPIView(APIView):
-     def post(self, request, uuid):
+     def post(self, request, survey_id, uuid):
 
-        success_callback_url = "localhost:3000" # 일단 localhost로 고정 -> 나중에 수정 필요
-        fail_callback_url = "localhost:3000" # 일단 localhost로 고정 -> 나중에 수정 필요
+        success_callback_url = "https://ibelievesurvey.com/" # 일단 localhost로 고정 -> 나중에 수정 필요
+        fail_callback_url = "https://ibelievesurvey.com/" # 일단 localhost로 고정 -> 나중에 수정 필요
         receiver_type = "PHONE"
+        CLIENT_ID = SOCIAL_OUTH_CONFIG['KAKAO_REST_API_KEY']
 
         try:
             # cart = Cart.objects.filter(is_sent=False)
-            order = Order.objects.filter(cart = uuid)
+            order_list = Order.objects.filter(cart = uuid)
             # order = Order.objects.select_related('cart', 'receiver').get(pk=request.data['order_id'])
 
-            for _ in range(order.cart.quantity):
+            # cart = get_object_or_404(Cart, uuid=uuid)
+            # order = Order.objects.get(cart=cart)
+
+            for order in order_list:
                 receiver = order.receiver
                 cart = order.cart
 
-                kakaoId = receiver.kakaoId
+                kakaoId = receiver.user.kakaoId
                 template_id = cart.template_id
-                user = User.objects.select_related('participant').get(kakaoId=kakaoId)
-                template = Template.objects.select_related('cart').get(template_id=template_id)
+                user = User.objects.get(kakaoId=kakaoId)
+                template_id = order.cart.template.id # 밑에 줄까지 2줄 포함해서 order.cart.template으로 변경해서 test
+                template = Template.objects.get(id = template_id)
+                # template = Template.objects.select_related('cart').get(template_id=template_id)
 
                 phone_number = user.phoneNumber
                 if len(phone_number)==13 and phone_number[3]=="-" and phone_number[8]=="-": # 010-1234-5678 -> 13자
@@ -38,11 +44,12 @@ class CroneSendGiftAPIView(APIView):
 
                 real_name = user.realName
                 template_token = template.template_token
+                # template_token = template.template_trace_id # 수정함
                 template_order_name = template.template_name
                 template_trace_id = template.template_trace_id
 
                 payload = {
-                    "template_token": template_token,
+                    "template_token": str(template_token),
                     "receiver_type": receiver_type,
                     "receivers": [{
                         "name": real_name,
@@ -51,20 +58,24 @@ class CroneSendGiftAPIView(APIView):
                     "success_callback_url": success_callback_url,
                     "fail_callback_url": fail_callback_url,
                     "template_order_name": template_order_name,
-                    "external_order_id": str(cart.uuid) + str(order_id) 
+                    "external_order_id": str(uuid) + str(order.id) 
                 }
 
                 headers = {
                     "accept": "application/json",
                     "content-type": "application/json",
-                    "Authorization": "KakaoAK f49e58b9e6f3d2cc175679f1c5534ca7"
+                    "Authorization": "KakaoAK " + CLIENT_ID
                 }
 
                 # 선물 발송 API 요청 보내기
                 response = requests.post("https://gateway-giftbiz.kakao.com/openapi/giftbiz/v1/template/order", json=payload, headers=headers)
 
                 if response.status_code != status.HTTP_200_OK:
-                    return Response({"message": "선물 발송 요청 실패."}, status=response.status_code)
+                    print("Request Payload:", payload)
+                    print("headers:", headers)
+                    print("Response Content:", response.content)
+                    return Response({"message": "선물 발송 요청 실패. " + response.text}, status=response.status_code)
+                    # return Response({"message": "선물 발송 요청 실패."}, status=response.status_code)
 
             return Response({"message": "선물 발송 요청 성공."}, status=status.HTTP_200_OK)
 
