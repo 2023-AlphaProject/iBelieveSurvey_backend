@@ -39,9 +39,9 @@ class Cart(BaseModel):
     )
 
     is_sent = models.BooleanField(
-        verbose_name = "선물 발송 여부",
+        verbose_name="선물 발송 여부",
         null=False,
-        default = False,
+        default=False,
     )
 
     @property
