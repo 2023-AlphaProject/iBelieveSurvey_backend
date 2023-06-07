@@ -7,18 +7,26 @@ from order.models import Order
 from template.models import Template
 from user.models import User
 from config.settings.base import SOCIAL_OUTH_CONFIG
+import os
 
-class CroneSendGiftAPIView(APIView):
+class CronSendGiftAPIView(APIView):
      def post(self, request, survey_id, uuid):
 
         success_callback_url = "https://ibelievesurvey.com/" # 일단 localhost로 고정 -> 나중에 수정 필요
         fail_callback_url = "https://ibelievesurvey.com/" # 일단 localhost로 고정 -> 나중에 수정 필요
         receiver_type = "PHONE"
         CLIENT_ID = SOCIAL_OUTH_CONFIG['KAKAO_REST_API_KEY']
+        template_token_list_str = os.environ.get("TEMPLATE_TOKEN_LIST") 
+        template_token_list = eval(template_token_list_str)
+        print("토큰리스트~", template_token_list)
+        # template_token_list = ast.literal_eval(template_token_list_str)
 
         try:
             # cart = Cart.objects.filter(is_sent=False)
             order_list = Order.objects.filter(cart = uuid)
+            if len(order_list) == 0:
+                return Response({"error": "잘못된 장바구니 접근 입니다."}, status=400)
+            print(order_list)
             # order = Order.objects.select_related('cart', 'receiver').get(pk=request.data['order_id'])
 
             # cart = get_object_or_404(Cart, uuid=uuid)
@@ -41,16 +49,36 @@ class CroneSendGiftAPIView(APIView):
                     phone_number = user.phoneNumber
                 else:
                     formatted_number = phone_number[:3] + '-' + phone_number[3:7] + '-' + phone_number[7:]
-                    phone_number - formatted_number
+                    phone_number = formatted_number
 
                 real_name = user.realName
-                template_token = template.template_token
-                # template_token = template.template_trace_id # 수정함
                 template_order_name = template.template_name
+                print("템플릿 이름", template_order_name)
+                print(real_name)
+                print(phone_number)
+
+
+#//
+                # template_token = template_token_list[template_order_name]
+                # print("template_token 출력", template_token)
+
+
+                # template_token = template.template_token
+
+                for item in template_token_list:
+                    if str(template_order_name) in item:
+                        template_token = item[template_order_name]
+                        print("템플릿 토큰~",template_token)
+                        break
+
+
+#//
+
                 template_trace_id = template.template_trace_id
 
                 payload = {
-                    "template_token": 'YkxoMFBXRERwZXVnY3JiT3dObXR3NHNrWWNMNG13WUtJWkZwbmhJOU9aVXJMM0ViWTF3U0haSU1QbmRmcUVyaw',
+                    # "template_token": 'YkxoMFBXRERwZXVnY3JiT3dObXR3NHNrWWNMNG13WUtJWkZwbmhJOU9aVXJMM0ViWTF3U0haSU1QbmRmcUVyaw',
+                    "template_token": template_token,
                     "receiver_type": receiver_type,
                     "receivers": [{
                         "name": real_name,
