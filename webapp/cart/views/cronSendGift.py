@@ -1,16 +1,4 @@
-from email import header
-import requests
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from order.models import Order
-from template.models import Template
-from user.models import User
-from config.settings.base import SOCIAL_OUTH_CONFIG
-import os
-
-class CronSendGiftAPIView(APIView):
-     def post(self, request, survey_id, uuid):
+def sendGift(self, request, survey_id, uuid):
 
         success_callback_url = "https://ibelievesurvey.com/" # 일단 localhost로 고정 -> 나중에 수정 필요
         fail_callback_url = "https://ibelievesurvey.com/" # 일단 localhost로 고정 -> 나중에 수정 필요
@@ -19,6 +7,7 @@ class CronSendGiftAPIView(APIView):
         template_token_list_str = os.environ.get("TEMPLATE_TOKEN_LIST") 
         template_token_list = eval(template_token_list_str)
         print("토큰리스트~", template_token_list)
+        # template_token_list = ast.literal_eval(template_token_list_str)
 
         try:
             # cart = Cart.objects.filter(is_sent=False)
@@ -34,7 +23,10 @@ class CronSendGiftAPIView(APIView):
                 kakaoId = receiver.user.kakaoId
                 template_id = cart.template_id
                 user = User.objects.get(kakaoId=kakaoId)
-                template = order.cart.template 
+                template = order.cart.template # 밑에 줄까지 2줄 포함해서 order.cart.template으로 변경해서 test
+                # template = Template.objects.get(id = template_id)
+
+                # template = Template.objects.select_related('cart').get(template_id=template_id)
 
                 phone_number = user.phoneNumber
                 if len(phone_number)==13 and phone_number[3]=="-" and phone_number[8]=="-": # 010-1234-5678 -> 13자
@@ -55,9 +47,13 @@ class CronSendGiftAPIView(APIView):
                         print("템플릿 토큰~",template_token)
                         break
 
+
+#//
+
                 template_trace_id = template.template_trace_id
 
                 payload = {
+                    # "template_token": 'YkxoMFBXRERwZXVnY3JiT3dObXR3NHNrWWNMNG13WUtJWkZwbmhJOU9aVXJMM0ViWTF3U0haSU1QbmRmcUVyaw',
                     "template_token": template_token,
                     "receiver_type": receiver_type,
                     "receivers": [{
