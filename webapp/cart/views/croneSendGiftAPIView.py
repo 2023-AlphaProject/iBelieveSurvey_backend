@@ -31,8 +31,9 @@ class CroneSendGiftAPIView(APIView):
                 kakaoId = receiver.user.kakaoId
                 template_id = cart.template_id
                 user = User.objects.get(kakaoId=kakaoId)
-                template_id = order.cart.template.id # 밑에 줄까지 2줄 포함해서 order.cart.template으로 변경해서 test
-                template = Template.objects.get(id = template_id)
+                template = order.cart.template # 밑에 줄까지 2줄 포함해서 order.cart.template으로 변경해서 test
+                # template = Template.objects.get(id = template_id)
+
                 # template = Template.objects.select_related('cart').get(template_id=template_id)
 
                 phone_number = user.phoneNumber
@@ -49,7 +50,7 @@ class CroneSendGiftAPIView(APIView):
                 template_trace_id = template.template_trace_id
 
                 payload = {
-                    "template_token": str(template_token),
+                    "template_token": 'YkxoMFBXRERwZXVnY3JiT3dObXR3NHNrWWNMNG13WUtJWkZwbmhJOU9aVXJMM0ViWTF3U0haSU1QbmRmcUVyaw',
                     "receiver_type": receiver_type,
                     "receivers": [{
                         "name": real_name,
