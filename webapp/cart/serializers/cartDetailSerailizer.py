@@ -14,6 +14,7 @@ class CartDetailSerializer(serializers.ModelSerializer):
             "survey",
             "template",
             "quantity",
+            "is_sent",
         ]
         read_only_fields = [
             "uuid",

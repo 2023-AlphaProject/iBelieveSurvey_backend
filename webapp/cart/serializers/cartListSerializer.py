@@ -18,7 +18,8 @@ class CartListSerializer(serializers.ModelSerializer):
             "template",
             "quantity",
             "total_price",
-            'result_price'
+            'result_price',
+            "is_sent"
         ]
         read_only_fields = [
             "uuid",
