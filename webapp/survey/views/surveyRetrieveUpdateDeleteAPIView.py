@@ -31,6 +31,27 @@ class SurveyRetrieveUpdateDestoryAPIView(RetrieveUpdateDestroyAPIView):
         else:
             return SurveySerializer
 
+    def get(self, request, *args, **kwargs):
+        """
+        설문조사를 조회합니다.
+        로그인한 유저만 조회 가능합니다.
+        """
+        super().get(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        """
+        설문조사를 수정합니다.
+        진행중이거나 종료된 설문은 수정할 수 없습니다.
+        """
+        super().put(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        """
+        설문조사를 수정합니다.
+        진행중이거나 종료된 설문은 수정할 수 없습니다.
+        """
+        super().patch(request, *args, **kwargs)
+
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
@@ -49,6 +70,10 @@ class SurveyRetrieveUpdateDestoryAPIView(RetrieveUpdateDestroyAPIView):
         return Response(serializer.data)
 
     def delete(self, request, *args, **kwargs):
+        """
+        설문조사를 삭제합니다.
+        진행중이거나 종료된 설문은 수정할 수 없습니다.
+        """
         instance = self.get_object()
         if not instance.is_idle:
             return Response({'error': '설문이 진행중이거나 종료되어서 삭제할 수 없습니다.'}, status=400)
