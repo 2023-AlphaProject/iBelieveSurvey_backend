@@ -39,9 +39,6 @@ class Command(BaseCommand):
                 print("######################################################")
                 print("")
 
-                template_objs = Template.objects.all()
-                for template_obj in template_objs:
-                    print(template_obj.template_token)
                 return
 
             else:
