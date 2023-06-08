@@ -185,3 +185,6 @@ JWT_AUTH = {
 CRONJOBS = [
     ('0 8 * * *', 'order.cronAssignReceiver.assignReciver', '>> ../var/log/cron.log'),
 ]
+
+FRONTEND_URL = "https://ibelievesurvey.com/"
+BACKEND_URL = "https://api.ibelievesurvey.com/"
