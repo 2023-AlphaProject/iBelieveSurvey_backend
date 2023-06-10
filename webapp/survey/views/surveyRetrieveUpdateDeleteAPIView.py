@@ -36,21 +36,21 @@ class SurveyRetrieveUpdateDestoryAPIView(RetrieveUpdateDestroyAPIView):
         설문조사를 조회합니다.
         로그인한 유저만 조회 가능합니다.
         """
-        super().get(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
         """
         설문조사를 수정합니다.
         진행중이거나 종료된 설문은 수정할 수 없습니다.
         """
-        super().put(request, *args, **kwargs)
+        return super().put(request, *args, **kwargs)
 
     def patch(self, request, *args, **kwargs):
         """
         설문조사를 수정합니다.
         진행중이거나 종료된 설문은 수정할 수 없습니다.
         """
-        super().patch(request, *args, **kwargs)
+        return super().patch(request, *args, **kwargs)
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)

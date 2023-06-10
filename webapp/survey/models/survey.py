@@ -96,7 +96,10 @@ class Survey(BaseModel):
             'total_quantity']
         if participants == 0:
             return 0
-        percentage = round(gifticonsCount / participants * 100, 3)
+        try:
+            percentage = round(gifticonsCount / participants * 100, 3)
+        except TypeError:
+            return 0
         if percentage > 100:
             return 100
         return percentage
