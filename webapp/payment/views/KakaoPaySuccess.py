@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import redirect
 from django.utils import timezone
 from rest_framework.views import APIView
@@ -9,6 +10,9 @@ from survey.models.survey import Survey
 
 class KakaoPaySuccess(APIView):
     def get(self, request, survey_id):
+        """
+        카카오페이 결제 성공 시, 해당 설문의 상태를 변경합니다.
+        """
         survey = Survey.objects.get(id=survey_id)
         survey.is_idle = False
         survey.is_paid = True
@@ -22,4 +26,4 @@ class KakaoPaySuccess(APIView):
                 for _ in range(cart.quantity):
                     Order.objects.create(cart=cart, receiver=None)
 
-        return redirect('http://localhost')
+        return redirect(settings.FRONTEND_URL + "/surveys/" + str(survey_id))

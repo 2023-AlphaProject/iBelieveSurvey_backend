@@ -23,7 +23,6 @@ urlpatterns = [
     path('user/', include('user.urls'), name='users'),
     path('templates/', include('template.urls'), name='templates'),
     path('surveys/', include('survey.urls'), name='surveys'),
-    path('orders/', include('order.urls'), name='orders'),
 ]
 
 urlpatterns += [

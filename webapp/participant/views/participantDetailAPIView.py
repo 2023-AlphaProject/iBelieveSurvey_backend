@@ -29,7 +29,7 @@ class ParticipantDetailAPIView(RetrieveAPIView, UpdateAPIView):
 
     def put(self, request, *args, **kwargs):
         """
-        설문 참여자가 해당 설문에 대한 답변을 생성합니다.
+        설문 참여자가 해당 설문에 대한 답변을 수정합니다.
         """
         try:
             participant = self.get_object()

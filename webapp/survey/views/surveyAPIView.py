@@ -40,6 +40,18 @@ class SurveyAPIView(CreateAPIView, ListAPIView):
     search_fields = ['title']
     permission_classes = [IsSurveyOwnerOrReadOnly]
 
+    def get(self, request, *args, **kwargs):
+        """
+        설문조사 목록을 조회합니다.
+        """
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        """
+        설문조사를 생성합니다.
+        """
+        return super().post(request, *args, **kwargs)
+
     def perform_create(self, serializer):
         s3_client = boto3.client(
             's3',

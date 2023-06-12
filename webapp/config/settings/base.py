@@ -204,3 +204,5 @@ STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
+FRONTEND_URL = "https://ibelievesurvey.com/"
+BACKEND_URL = "https://api.ibelievesurvey.com/"
