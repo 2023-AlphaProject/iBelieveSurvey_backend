@@ -12,6 +12,7 @@ from config.settings.base import SECRET_KEY
 from django.http import HttpResponse
 import jwt
 
+
 @api_view(['GET'])
 @permission_classes([AllowAny, ])
 def kakaoGetLogin(request):
@@ -39,33 +40,34 @@ def kakaoCallback(request):
     print(token_response.json())
     access_token = token_response.json().get('access_token')
 
-    user_info_response = requests.get('https://kapi.kakao.com/v2/user/me', headers={"Authorization": f'Bearer ${access_token}'})
+    user_info_response = requests.get('https://kapi.kakao.com/v2/user/me',
+                                      headers={"Authorization": f'Bearer ${access_token}'})
 
     profile_json = user_info_response.json()
 
     kakao_account = profile_json.get("kakao_account")
     kakaoId = profile_json.get("id")
-    email = kakao_account.get("email", None) 
+    email = kakao_account.get("email", None)
 
     if email is None:
         return JsonResponse({'err_msg': 'failed to get email'}, status=status.HTTP_400_BAD_REQUEST)
 
     # 카카오톡 계정이 DB에 저장되어 있는지 확인
-    if User.objects.filter(kakaoId=kakaoId).exists():  
-        user_info = User.objects.get(kakaoId=kakaoId)  
+    if User.objects.filter(kakaoId=kakaoId).exists():
+        user_info = User.objects.get(kakaoId=kakaoId)
         encoded_jwt = jwt.encode({'id': user_info.kakaoId}, SECRET_KEY, algorithm='HS256')  # jwt토큰 발행
         return HttpResponse(f'id:{user_info.kakaoId}, token:{encoded_jwt}, exist:true')
 
     # 저장되어 있지 않다면 회원가
     else:
         User(
-            kakaoId = kakaoId,
-            email = email, 
+            kakaoId=kakaoId,
+            email=email,
         ).save()
         user_info = User.objects.get(kakaoId=kakaoId)
-        encoded_jwt = jwt.encode({'id': user_info.kakaoId}, SECRET_KEY, algorithm='HS256')  
+        encoded_jwt = jwt.encode({'id': user_info.kakaoId}, SECRET_KEY, algorithm='HS256')
         return HttpResponse(f'id:{user_info.kakaoId}, token:{encoded_jwt}, exist:true')
-    
+
 # @api_view(['POST'])
 # @permission_classes([AllowAny, ])
 # def logout(self,request):

@@ -1,12 +1,17 @@
+import os
+from datetime import datetime
+
+import boto3
 from django.db.models import Count
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework.response import Response
-
 from survey.models import Survey
 from survey.permissions import IsSurveyOwnerOrReadOnly
 from survey.serializers import SurveySerializer
+
+from config.settings.base import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_STORAGE_BUCKET_NAME
 
 
 class WinningPercentageOrderingFilter(filters.OrderingFilter):
@@ -48,7 +53,25 @@ class SurveyAPIView(CreateAPIView, ListAPIView):
         return super().post(request, *args, **kwargs)
 
     def perform_create(self, serializer):
-        serializer.save(writer=self.request.user)
+        s3_client = boto3.client(
+            's3',
+            aws_access_key_id=AWS_ACCESS_KEY_ID,
+            aws_secret_access_key_id=AWS_SECRET_ACCESS_KEY
+        )
+
+        image = self.request.FILES['filename']
+        image_time = (str(datetime.now())).replace(" ", "")
+        image_type = (image.content_type).split("/")[1]
+        s3_client.upload_fileobj(
+            image,  # 업로드할 파일 객체
+            AWS_STORAGE_BUCKET_NAME,  # S3 버킷 이름
+            image_time + "." + image_type,  # S3 버킷에 저장될 파일의 경로와 이름
+            ExtraArgs={"ContentType": image.content_type}  # 파일의 ContentType 설정
+        )
+        image_url = os.environ.get("S3_URL") + image_time + "." + image_type
+        image_url = image_url.replace(" ", "/")
+
+        serializer.save(writer=self.request.user, thumbnail=image_url)
 
     def create(self, request, *args, **kwargs):
         if request.user.is_authenticated:
