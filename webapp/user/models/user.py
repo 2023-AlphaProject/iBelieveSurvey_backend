@@ -88,13 +88,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self) -> str:
         return f'[{self.realName} ({self.email})'
 
-    @property
-    def hidden_realName(self):
-        if len(self.realName) == 2:
-            return self.realName[0] + "*"
-        else:
-            return self.realName[0] + "*" * (len(self.realName) - 2) + self.realName[-1]
-
-    @property
-    def hidden_phoneNumber(self):
-        return self.phoneNumber[:3] + "-" + "*" * 4 + "-" + self.phoneNumber[-4:]
+    # @property
+    # def hidden_realName(self):
+    #     if len(self.realName) == 2:
+    #         return self.realName[0] + "*"
+    #     else:
+    #         return self.realName[0] + "*" * (len(self.realName) - 2) + self.realName[-1]
+    #
+    # @property
+    # def hidden_phoneNumber(self):
+    #     return self.phoneNumber[:3] + "-" + "*" * 4 + "-" + self.phoneNumber[-4:]
