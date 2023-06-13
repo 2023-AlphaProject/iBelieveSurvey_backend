@@ -5,7 +5,6 @@ import boto3
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from config.settings.base import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_STORAGE_BUCKET_NAME
 
 from survey.models import Survey
 from survey.permissions import IsSurveyOwnerOrReadOnly
@@ -39,18 +38,20 @@ class SurveyRetrieveUpdateDestoryAPIView(RetrieveUpdateDestroyAPIView):
     def perform_update(self, serializer):
         s3_client = boto3.client(
             's3',
-            aws_access_key_id=AWS_ACCESS_KEY_ID,
-            aws_secret_access_key_id=AWS_SECRET_ACCESS_KEY
+            aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"),
+            aws_secret_access_key_id=os.environ.get("AWS_SECRET_ACCESS_KEY")
         )
 
         image = self.request.FILES.get('filename')
+        aws_storage_bucket_name = os.environ.get("AWS_STORAGE_BUCKET_NAME")
+
         if image:
             # 기존 thumbnail 삭제
             instance = self.get_object()
             if instance.thumbnail:
                 file_name = os.path.basename(instance.thumbnail)
                 s3_client.delete_object(
-                    Bucket=AWS_STORAGE_BUCKET_NAME,  # S3 버킷 이름
+                    Bucket=aws_storage_bucket_name,  # S3 버킷 이름
                     Key=file_name,  # 삭제할 파일의 경로와 이름
                 )
 
@@ -59,7 +60,7 @@ class SurveyRetrieveUpdateDestoryAPIView(RetrieveUpdateDestroyAPIView):
             image_type = (image.content_type).split("/")[1]
             s3_client.upload_fileobj(
                 image,  # 업로드할 파일 객체
-                "ibelievesurvey-be-deploy",  # S3 버킷 이름
+                aws_storage_bucket_name,  # S3 버킷 이름
                 image_time + "." + image_type,  # S3 버킷에 저장될 파일의 경로와 이름
                 ExtraArgs={"ContentType": image.content_type}  # 파일의 ContentType 설정
             )
@@ -111,15 +112,16 @@ class SurveyRetrieveUpdateDestoryAPIView(RetrieveUpdateDestroyAPIView):
     def perform_destroy(self, instance):
         s3_client = boto3.client(
             's3',
-            aws_access_key_id=AWS_ACCESS_KEY_ID,
-            aws_secret_access_key_id=AWS_SECRET_ACCESS_KEY
+            aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"),
+            aws_secret_access_key_id=os.environ.get("AWS_SECRET_ACCESS_KEY")
         )
+        aws_storage_bucket_name = os.environ.get("AWS_STORAGE_BUCKET_NAME")
 
         # thumbnail 삭제
         if instance.thumbnail:
             file_name = os.path.basename(instance.thumbnail)
             s3_client.delete_object(
-                Bucket=AWS_STORAGE_BUCKET_NAME,  # S3 버킷 이름
+                Bucket=aws_storage_bucket_name,  # S3 버킷 이름
                 Key=file_name,  # 삭제할 파일의 경로와 이름
             )
 
