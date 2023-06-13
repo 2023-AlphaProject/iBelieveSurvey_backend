@@ -13,6 +13,8 @@ class HiddenEndSurveySerializer(serializers.ModelSerializer):
     winningPercentage = serializers.SerializerMethodField()
     receiver = serializers.SerializerMethodField()
 
+    category = serializers.StringRelatedField()
+
     class Meta:
         model = Survey
         fields = [

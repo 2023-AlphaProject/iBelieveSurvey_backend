@@ -7,6 +7,8 @@ class SurveyRetrieveSerializer(serializers.ModelSerializer):
     participants = serializers.SerializerMethodField()
     winningPercentage = serializers.SerializerMethodField()
 
+    category = serializers.StringRelatedField()
+
     class Meta:
         model = Survey
         fields = [
