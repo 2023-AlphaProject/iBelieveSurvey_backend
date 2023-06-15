@@ -48,14 +48,14 @@ class ParticipantListAPIView(ListCreateAPIView):
         """
         설문 참여자가 해당 설문에 대한 답변을 생성합니다.
         """
-        if not self.request.user.is_authenticated:
-            return Response({"error": "설문에 답변하기 위해선 로그인이 필요합니다."})
-
-        if self.request.user != self.get_survey().writer:
-            return Response({"error": "설문 작성자는 본인의 설문에 답변할 수 없습니다."})
-
-        if not self.get_survey().is_ongoing:
-            return Response({"error": "설문이 진행 중이 아니므로 답변할 수 없습니다."})
+        # if not self.request.user.is_authenticated:
+        #     return Response({"error": "설문에 답변하기 위해선 로그인이 필요합니다."})
+        #
+        # if self.request.user != self.get_survey().writer:
+        #     return Response({"error": "설문 작성자는 본인의 설문에 답변할 수 없습니다."})
+        #
+        # if not self.get_survey().is_ongoing:
+        #     return Response({"error": "설문이 진행 중이 아니므로 답변할 수 없습니다."})
 
         return self.create(request, *args, **kwargs)
 
