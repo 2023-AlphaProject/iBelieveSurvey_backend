@@ -30,6 +30,11 @@ class Survey(BaseModel):
         null=False,
     )
 
+    outline = models.TextField(
+        verbose_name="설문 개요",
+        null=False,
+    )
+
     thumbnail = models.ImageField(
         verbose_name="설문 썸네일",
         max_length=255,
