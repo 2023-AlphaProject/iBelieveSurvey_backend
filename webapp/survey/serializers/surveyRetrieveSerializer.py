@@ -17,6 +17,7 @@ class SurveyRetrieveSerializer(serializers.ModelSerializer):
             'title',
             'outline',
             'thumbnail',
+            'basic_thumbnail',
             'category',
             'category_name',
             'is_idle',
