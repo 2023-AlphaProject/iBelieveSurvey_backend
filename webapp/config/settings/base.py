@@ -35,9 +35,6 @@ JAZZMIN_SETTINGS = {
     'site_brand': 'IBelieveSurvey',
 }
 
-# 미디어 파일을 위한 스토리지 설정
-DEFAULT_FILE_STORAGE = 'config.storages.MediaStorage'
-
 DEFAULT_APPS = [
     'jazzmin',
     'django.contrib.admin',

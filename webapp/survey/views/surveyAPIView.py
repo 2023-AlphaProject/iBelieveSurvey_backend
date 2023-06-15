@@ -1,5 +1,3 @@
-from django.core.files.base import ContentFile
-from django.core.files.storage import default_storage
 from django.db.models import Count
 from django_filters.rest_framework import DjangoFilterBackend
 from requests import Response
@@ -52,30 +50,16 @@ class SurveyAPIView(CreateAPIView, ListAPIView):
         return super().post(request, *args, **kwargs)
 
     def perform_create(self, serializer):
-        serializer.save(writer=self.request.user)
+        try:
+            serializer.save(writer=self.request.user)
+        except:
+            serializer.save(writer=None)
 
     # def create(self, request, *args, **kwargs):
     #     if request.user.is_authenticated:
     #         return super().create(request, *args, **kwargs)
     #     else:
     #         return Response({'error': '로그인이 필요합니다.'}, status=400)
-
-    def create(self, request, *args, **kwargs):
-        thumbnail = request.FILES.get('thumbnail')
-        if thumbnail:
-            serializer = self.get_serializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            self.perform_create(serializer)
-
-            # thumbnail 파일 저장
-            file_name = default_storage.save(thumbnail.name, ContentFile(thumbnail.read()))
-            serializer.instance.thumbnail = file_name
-            serializer.instance.save()
-
-            headers = self.get_success_headers(serializer.data)
-            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-        else:
-            return super().create(request, *args, **kwargs)
 
     def get_queryset(self):
         return Survey.objects.annotate(participants=Count('participant'))
