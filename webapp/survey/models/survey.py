@@ -29,7 +29,7 @@ class Survey(BaseModel):
         null=False,
     )
 
-    thumbnail = models.URLField(
+    thumbnail = models.ImageField(
         verbose_name="설문 썸네일",
         max_length=255,
         null=True,

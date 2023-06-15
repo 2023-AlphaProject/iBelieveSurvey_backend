@@ -1,15 +1,13 @@
-import os
-from datetime import datetime
-
-import boto3
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
 from django.db.models import Count
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters
+from requests import Response
+from rest_framework import filters, status
 from rest_framework.generics import CreateAPIView, ListAPIView
-from rest_framework.response import Response
+from rest_framework.parsers import FormParser, MultiPartParser
 
 from survey.models import Survey
-from survey.permissions import IsSurveyOwnerOrReadOnly
 from survey.serializers import SurveySerializer
 
 
@@ -37,7 +35,9 @@ class SurveyAPIView(CreateAPIView, ListAPIView):
     ordering_fields = ['started_at', 'end_at', 'participants', 'winningPercentage']
     filterset_fields = ['title', 'category', 'is_paid', 'is_survey_hidden', ]
     search_fields = ['title']
-    permission_classes = [IsSurveyOwnerOrReadOnly]
+    parser_classes = (FormParser, MultiPartParser)
+
+    # permission_classes = [IsSurveyOwnerOrReadOnly]
 
     def get(self, request, *args, **kwargs):
         """
@@ -52,32 +52,30 @@ class SurveyAPIView(CreateAPIView, ListAPIView):
         return super().post(request, *args, **kwargs)
 
     def perform_create(self, serializer):
-        s3_client = boto3.client(
-            's3',
-            aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"),
-            aws_secret_access_key_id=os.environ.get("AWS_SECRET_ACCESS_KEY")
-        )
+        serializer.save(writer=self.request.user)
 
-        image = self.request.FILES['filename']
-        image_time = (str(datetime.now())).replace(" ", "")
-        image_type = (image.content_type).split("/")[1]
-        aws_storage_bucket_name = os.environ.get("AWS_STORAGE_BUCKET_NAME")
-        s3_client.upload_fileobj(
-            image,  # 업로드할 파일 객체
-            aws_storage_bucket_name,  # S3 버킷 이름
-            image_time + "." + image_type,  # S3 버킷에 저장될 파일의 경로와 이름
-            ExtraArgs={"ContentType": image.content_type}  # 파일의 ContentType 설정
-        )
-        image_url = os.environ.get("S3_URL") + image_time + "." + image_type
-        image_url = image_url.replace(" ", "/")
-
-        serializer.save(writer=self.request.user, thumbnail=image_url)
+    # def create(self, request, *args, **kwargs):
+    #     if request.user.is_authenticated:
+    #         return super().create(request, *args, **kwargs)
+    #     else:
+    #         return Response({'error': '로그인이 필요합니다.'}, status=400)
 
     def create(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            return super().create(request, *args, **kwargs)
+        thumbnail = request.FILES.get('thumbnail')
+        if thumbnail:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+
+            # thumbnail 파일 저장
+            file_name = default_storage.save(thumbnail.name, ContentFile(thumbnail.read()))
+            serializer.instance.thumbnail = file_name
+            serializer.instance.save()
+
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         else:
-            return Response({'error': '로그인이 필요합니다.'}, status=400)
+            return super().create(request, *args, **kwargs)
 
     def get_queryset(self):
         return Survey.objects.annotate(participants=Count('participant'))
