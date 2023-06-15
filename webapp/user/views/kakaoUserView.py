@@ -11,7 +11,8 @@ from user.models import User
 from config.settings.base import SECRET_KEY
 from django.http import HttpResponse
 import jwt
-
+from django.contrib.auth import authenticate, login
+from user.serializers import UserViewSerializer
 
 @api_view(['GET'])
 @permission_classes([AllowAny, ])
@@ -52,28 +53,76 @@ def kakaoCallback(request):
     if email is None:
         return JsonResponse({'err_msg': 'failed to get email'}, status=status.HTTP_400_BAD_REQUEST)
 
+    # try:
+    #     user_info = User.objects.get(kakaoId=kakaoId)
+    #     encoded_jwt = jwt.encode({'id': user_info.kakaoId}, SECRET_KEY, algorithm='HS256')  # jwt토큰 발행 
+    #     response = HttpResponse()
+    #     response.set_cookie('jwt_token', encoded_jwt) 
+    #     return response
+
+    # except User.DoesNotExist:
+    #     data = {
+    #           'kakaoId': kakaoId,
+    #           'email' : email,
+    #           'password': '1234',
+    #           # 비밀번호는 없지만 validation 을 통과하기 위해서 임시로 사용
+    #           # 비밀번호를 입력해서 로그인하는 부분은 없으므로 안전함
+    #         }
+            
+    #     serializer = UserViewSerializer(data=data)
+    #     if not serializer.is_valid():
+    #         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    #     user = serializer.validated_data
+    #     serializer.create(validated_data=user)
+
+    #         # 2-1. 회원가입 하고 토큰 만들어서 쿠키에 저장하기
+    #     try:
+    #         user_info = User.objects.get(kakaoId=kakaoId)
+    #         encoded_jwt = jwt.encode({'id': user_info.kakaoId}, SECRET_KEY, algorithm='HS256')  # jwt토큰 발행 
+    #         response = HttpResponse()
+    #         response.set_cookie('jwt_token', encoded_jwt) 
+    #         return response
+    #     except:
+    #         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
     # 카카오톡 계정이 DB에 저장되어 있는지 확인
     if User.objects.filter(kakaoId=kakaoId).exists():
         user_info = User.objects.get(kakaoId=kakaoId)
-        encoded_jwt = jwt.encode({'id': user_info.kakaoId}, SECRET_KEY, algorithm='HS256')  # jwt토큰 발행
-        return HttpResponse(f'id:{user_info.kakaoId}, token:{encoded_jwt}, exist:true')
 
-    # 저장되어 있지 않다면 회원가
+        # jwt 방식
+        encoded_jwt = jwt.encode({'id': user_info.kakaoId}, SECRET_KEY, algorithm='HS256')  # jwt토큰 발행 
+        # # return HttpResponse(f'id:{user_info.kakaoId}, token:{encoded_jwt}, exist:true')
+        # # user = User.objects.get(kakaoId=kakaoId)
+        # user = authenticate(request, user=user_info)  # 사용자 인증
+        # # if user is not None:
+        # login(request, user)  # 인증된 사용자로 로그인
+        # print("2222222222")
+        #     # return super().create(request, *args, **kwargs)
+
+        return JsonResponse({'access_token': encoded_jwt}, status=201)
+
+    # 저장되어 있지 않다면 회원가입 
     else:
         User(
             kakaoId=kakaoId,
             email=email,
         ).save()
         user_info = User.objects.get(kakaoId=kakaoId)
-        encoded_jwt = jwt.encode({'id': user_info.kakaoId}, SECRET_KEY, algorithm='HS256')
-        return HttpResponse(f'id:{user_info.kakaoId}, token:{encoded_jwt}, exist:true')
+        serializer = UserViewSerializer(data=user_info)
+        if not serializer.is_valid():
+            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# @api_view(['POST'])
-# @permission_classes([AllowAny, ])
-# def logout(self,request):
-#         res = Response()
-#         res.delete_cookie('encoded_jwt')
-#         res.data = {
-#             "message" : 'success'
-#         }
-#         return res
+        # jwt 방식
+        encoded_jwt = jwt.encode({'id': user_info.kakaoId}, SECRET_KEY, algorithm='HS256')
+        # return HttpResponse(f'id:{user_info.kakaoId}, token:{encoded_jwt}, exist:true')
+        # user = authenticate(request, user=user_info)  # 사용자 인증
+        # # if user is not None:
+        #     login(request, user)  # 인증된 사용자로 로그인
+        #     print("111111111")
+            # return super().create(request, *args, **kwargs)
+        return JsonResponse({'access_token': encoded_jwt}, status=201)

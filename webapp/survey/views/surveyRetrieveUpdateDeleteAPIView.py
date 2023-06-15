@@ -76,6 +76,7 @@ class SurveyRetrieveUpdateDestoryAPIView(RetrieveUpdateDestroyAPIView):
         설문조사를 조회합니다.
         로그인한 유저만 조회 가능합니다.
         """
+        print("로그인 안됨 이슈")
         return super().get(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):

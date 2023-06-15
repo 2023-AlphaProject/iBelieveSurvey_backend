@@ -53,6 +53,8 @@ DEFAULT_APPS = [
     'corsheaders',
     'django_crontab',
     'storages',
+    'rest_framework_simplejwt',
+    'rest_framework.authtoken',
 ]
 
 USER_APPS = [
@@ -207,3 +209,5 @@ else:
 
 FRONTEND_URL = "https://ibelievesurvey.com/"
 BACKEND_URL = "https://api.ibelievesurvey.com/"
+
+
