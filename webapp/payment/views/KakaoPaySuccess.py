@@ -1,6 +1,7 @@
+from datetime import date
+
 from django.conf import settings
 from django.shortcuts import redirect
-from django.utils import timezone
 from rest_framework.views import APIView
 
 from cart.models.cart import Cart
@@ -10,13 +11,14 @@ from survey.models.survey import Survey
 
 class KakaoPaySuccess(APIView):
     def get(self, request, survey_id):
+        print("=================페이 성공!=================")
         """
         카카오페이 결제 성공 시, 해당 설문의 상태를 변경합니다.
         """
         survey = Survey.objects.get(id=survey_id)
         survey.is_idle = False
         survey.is_paid = True
-        survey.started_at = timezone.now()
+        survey.started_at = date.today()
         survey.save()
 
         carts = Cart.objects.filter(survey=survey)

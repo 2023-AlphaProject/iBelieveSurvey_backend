@@ -1,9 +1,9 @@
 import os
 
 import requests
+from django.conf import settings
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.conf import settings
 
 from cart.models import Cart
 from survey.models import Survey
@@ -14,6 +14,7 @@ BASEURL = settings.BACKEND_URL
 class KakaoPayAPI(APIView):
 
     def post(self, request, survey_id):
+        print("=================결제 API 호출!=================")
         """
         카카오페이 결제 API를 호출합니다.
         종료된 설문만 결제가 가능합니다.
