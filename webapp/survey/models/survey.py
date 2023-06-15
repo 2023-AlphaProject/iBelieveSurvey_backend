@@ -41,6 +41,12 @@ class Survey(BaseModel):
         null=True,
     )
 
+    basic_thumbnail = models.CharField(
+        verbose_name="설문 기본 썸네일",
+        max_length=255,
+        null=True,
+    )
+
     category = models.ForeignKey(
         'survey.Category',
         verbose_name="카테고리",
