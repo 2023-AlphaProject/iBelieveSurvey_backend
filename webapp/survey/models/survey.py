@@ -77,7 +77,7 @@ class Survey(BaseModel):
         null=True,
     )
 
-    end_at = models.DateTimeField(
+    end_at = models.DateField(
         verbose_name="설문 종료 일시",
         null=True,
     )
