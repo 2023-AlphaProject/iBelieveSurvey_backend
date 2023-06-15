@@ -30,6 +30,11 @@ class Survey(BaseModel):
         null=False,
     )
 
+    outline = models.TextField(
+        verbose_name="설문 개요",
+        null=False,
+    )
+
     thumbnail = models.ImageField(
         verbose_name="설문 썸네일",
         max_length=255,
@@ -72,7 +77,7 @@ class Survey(BaseModel):
         null=True,
     )
 
-    end_at = models.DateTimeField(
+    end_at = models.DateField(
         verbose_name="설문 종료 일시",
         null=True,
     )

@@ -63,5 +63,3 @@ class SurveyAPIView(CreateAPIView, ListAPIView):
 
     def get_queryset(self):
         return Survey.objects.annotate(participants=Count('participant'))
-
-

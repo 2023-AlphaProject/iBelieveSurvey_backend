@@ -1,11 +1,13 @@
 from rest_framework import serializers
 
-from survey.models import Survey
+from survey.models import Survey, Category
 
 
 class SurveyRetrieveSerializer(serializers.ModelSerializer):
     participants = serializers.SerializerMethodField()
     winningPercentage = serializers.SerializerMethodField()
+    category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
+    category_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Survey
@@ -13,8 +15,10 @@ class SurveyRetrieveSerializer(serializers.ModelSerializer):
             'id',
             'writer',
             'title',
+            'outline',
             'thumbnail',
             'category',
+            'category_name',
             'is_idle',
             'is_paid',
             'is_ongoing',
@@ -35,6 +39,7 @@ class SurveyRetrieveSerializer(serializers.ModelSerializer):
             'is_end',
             'started_at',
             'created_at',
+            'category_name',
             'participants',
             'winningPercentage',
         ]
@@ -47,3 +52,6 @@ class SurveyRetrieveSerializer(serializers.ModelSerializer):
 
     def get_winningPercentage(self, obj):
         return obj.winningPercentage
+
+    def get_category_name(self, obj):
+        return obj.category.type

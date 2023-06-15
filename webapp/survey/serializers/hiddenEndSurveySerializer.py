@@ -3,7 +3,7 @@ from rest_framework import serializers
 from cart.models import Cart
 from order.models import Order
 from participant.models import Participant
-from survey.models import Survey
+from survey.models import Survey, Category
 from user.models import User
 from user.serializers import ReceiverSerializer
 
@@ -12,6 +12,8 @@ class HiddenEndSurveySerializer(serializers.ModelSerializer):
     participants = serializers.SerializerMethodField()
     winningPercentage = serializers.SerializerMethodField()
     receiver = serializers.SerializerMethodField()
+    category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
+    category_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Survey
@@ -19,8 +21,10 @@ class HiddenEndSurveySerializer(serializers.ModelSerializer):
             'id',
             'writer',
             'title',
+            'outline',
             'thumbnail',
             'category',
+            'category_name',
             'is_idle',
             'is_paid',
             'is_ongoing',
@@ -45,6 +49,7 @@ class HiddenEndSurveySerializer(serializers.ModelSerializer):
             'is_end',
             'started_at',
             'end_at',
+            'category_name',
             'is_survey_hidden',
             'participants',
             'created_at',
@@ -72,3 +77,6 @@ class HiddenEndSurveySerializer(serializers.ModelSerializer):
 
         serializer = ReceiverSerializer(winnerUsers, many=True)
         return serializer.data
+
+    def get_category_name(self, obj):
+        return obj.category.type
