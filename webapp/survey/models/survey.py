@@ -72,7 +72,7 @@ class Survey(BaseModel):
         default=False,
     )
 
-    started_at = models.DateTimeField(
+    started_at = models.DateField(
         verbose_name="설문 시작 일시",
         null=True,
     )
@@ -86,13 +86,15 @@ class Survey(BaseModel):
     def is_ongoing(self):
         if self.started_at is None or self.end_at is None:
             return False
-        return self.started_at is not None and self.started_at <= timezone.now() and self.end_at >= timezone.now()
+        now_date = timezone.now().date()
+        return self.started_at is not None and self.started_at <= now_date and self.end_at >= now_date
 
     @property
     def is_end(self):
         if self.end_at is None:
             return False
-        return self.end_at < timezone.now()
+
+        return self.end_at < timezone.now().date()
 
     @property
     def winningPercentage(self):
@@ -121,7 +123,7 @@ class Survey(BaseModel):
     def validate_end_at_field(self):
         if self.started_at is not None and self.end_at is not None and self.started_at > self.end_at:
             raise ValidationError('설문 종료 일시는 설문 시작 일시보다 빠를 수 없습니다.')
-        if self.end_at is not None and timezone.now() > self.end_at:
+        if self.end_at is not None and timezone.now().date() > self.end_at:
             raise ValidationError('설문 종료 일시는 현재 시간 보다 빠를 수 없습니다.')
 
     def save(self, *args, **kwargs):
