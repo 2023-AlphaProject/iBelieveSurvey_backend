@@ -1,7 +1,3 @@
-import os
-from datetime import datetime
-
-import boto3
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -12,7 +8,7 @@ from survey.serializers import *
 
 
 class SurveyRetrieveUpdateDestoryAPIView(RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsSurveyOwnerOrReadOnly, IsAuthenticated]
+    # permission_classes = [IsSurveyOwnerOrReadOnly, IsAuthenticated]
     queryset = Survey.objects.all()
     lookup_url_kwarg = 'survey_id'
 
@@ -34,42 +30,6 @@ class SurveyRetrieveUpdateDestoryAPIView(RetrieveUpdateDestroyAPIView):
             return NotHiddenEndSurveySerializer
         else:
             return SurveySerializer
-
-    def perform_update(self, serializer):
-        s3_client = boto3.client(
-            's3',
-            aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"),
-            aws_secret_access_key_id=os.environ.get("AWS_SECRET_ACCESS_KEY")
-        )
-
-        image = self.request.FILES.get('filename')
-        aws_storage_bucket_name = os.environ.get("AWS_STORAGE_BUCKET_NAME")
-
-        if image:
-            # 기존 thumbnail 삭제
-            instance = self.get_object()
-            if instance.thumbnail:
-                file_name = os.path.basename(instance.thumbnail)
-                s3_client.delete_object(
-                    Bucket=aws_storage_bucket_name,  # S3 버킷 이름
-                    Key=file_name,  # 삭제할 파일의 경로와 이름
-                )
-
-            # 새로운 thumbnail 업로드
-            image_time = (str(datetime.now())).replace(" ", "")
-            image_type = (image.content_type).split("/")[1]
-            s3_client.upload_fileobj(
-                image,  # 업로드할 파일 객체
-                aws_storage_bucket_name,  # S3 버킷 이름
-                image_time + "." + image_type,  # S3 버킷에 저장될 파일의 경로와 이름
-                ExtraArgs={"ContentType": image.content_type}  # 파일의 ContentType 설정
-            )
-            image_url = os.environ.get("S3_URL") + image_time + "." + image_type
-            image_url = image_url.replace(" ", "/")
-
-            serializer.save(writer=self.request.user, thumbnail=image_url)
-        else:
-            serializer.save(writer=self.request.user)
 
     def get(self, request, *args, **kwargs):
         """
@@ -108,24 +68,6 @@ class SurveyRetrieveUpdateDestoryAPIView(RetrieveUpdateDestroyAPIView):
             instance._prefetched_objects_cache = {}
 
         return Response(serializer.data)
-
-    def perform_destroy(self, instance):
-        s3_client = boto3.client(
-            's3',
-            aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"),
-            aws_secret_access_key_id=os.environ.get("AWS_SECRET_ACCESS_KEY")
-        )
-        aws_storage_bucket_name = os.environ.get("AWS_STORAGE_BUCKET_NAME")
-
-        # thumbnail 삭제
-        if instance.thumbnail:
-            file_name = os.path.basename(instance.thumbnail)
-            s3_client.delete_object(
-                Bucket=aws_storage_bucket_name,  # S3 버킷 이름
-                Key=file_name,  # 삭제할 파일의 경로와 이름
-            )
-
-        instance.delete()
 
     def delete(self, request, *args, **kwargs):
         """

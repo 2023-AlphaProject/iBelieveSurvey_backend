@@ -37,12 +37,15 @@ def kakaoCallback(request):
         'code': code,
     }
     token_response = requests.post(url, data=res)
+    print("token_response", end="")
     print(token_response.json())
     access_token = token_response.json().get('access_token')
-
+    print("access_token", end="")
+    print(access_token)
     user_info_response = requests.get('https://kapi.kakao.com/v2/user/me',
-                                      headers={"Authorization": f'Bearer ${access_token}'})
-
+                                      headers={"Authorization": f'Bearer {access_token}'})
+    print("user_info_response", end="")
+    print(user_info_response)
     profile_json = user_info_response.json()
 
     kakao_account = profile_json.get("kakao_account")
@@ -58,7 +61,7 @@ def kakaoCallback(request):
         encoded_jwt = jwt.encode({'id': user_info.kakaoId}, SECRET_KEY, algorithm='HS256')  # jwt토큰 발행
         return HttpResponse(f'id:{user_info.kakaoId}, token:{encoded_jwt}, exist:true')
 
-    # 저장되어 있지 않다면 회원가
+    # 저장되어 있지 않다면 회원가입
     else:
         User(
             kakaoId=kakaoId,

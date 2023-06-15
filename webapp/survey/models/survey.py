@@ -20,7 +20,8 @@ class Survey(BaseModel):
         User,
         verbose_name="설문 작성자",
         on_delete=models.CASCADE,
-        null=False,
+        null=True,
+        default=None,
     )
 
     title = models.CharField(
@@ -29,7 +30,7 @@ class Survey(BaseModel):
         null=False,
     )
 
-    thumbnail = models.URLField(
+    thumbnail = models.ImageField(
         verbose_name="설문 썸네일",
         max_length=255,
         null=True,
