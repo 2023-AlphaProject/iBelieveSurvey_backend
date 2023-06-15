@@ -11,7 +11,6 @@ from survey.models.survey import Survey
 
 class KakaoPaySuccess(APIView):
     def get(self, request, survey_id):
-        print("=================페이 성공!=================")
         """
         카카오페이 결제 성공 시, 해당 설문의 상태를 변경합니다.
         """
