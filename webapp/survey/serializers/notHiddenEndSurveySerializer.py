@@ -19,6 +19,7 @@ class NotHiddenEndSurveySerializer(serializers.ModelSerializer):
             'id',
             'writer',
             'title',
+            'outline',
             'thumbnail',
             'category',
             'is_idle',
