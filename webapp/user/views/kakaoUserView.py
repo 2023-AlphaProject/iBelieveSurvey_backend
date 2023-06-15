@@ -104,7 +104,8 @@ def kakaoCallback(request):
         # print("2222222222")
         #     # return super().create(request, *args, **kwargs)
 
-        return JsonResponse({'access_token': encoded_jwt}, status=201)
+        # return JsonResponse({'access_token': encoded_jwt}, status=201)
+        return HttpResponse(f'id:{user_info.kakaoId}, token:{encoded_jwt}, email:{email}, exist:true')
 
     # 저장되어 있지 않다면 회원가입 
     else:
@@ -125,4 +126,5 @@ def kakaoCallback(request):
         #     login(request, user)  # 인증된 사용자로 로그인
         #     print("111111111")
             # return super().create(request, *args, **kwargs)
-        return JsonResponse({'access_token': encoded_jwt}, status=201)
+        return HttpResponse(f'id:{user_info.kakaoId}, token:{encoded_jwt}, email:{email}, exist:true')
+        # return JsonResponse({'access_token': encoded_jwt}, status=201)
