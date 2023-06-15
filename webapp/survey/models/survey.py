@@ -72,7 +72,7 @@ class Survey(BaseModel):
         default=False,
     )
 
-    started_at = models.DateTimeField(
+    started_at = models.DateField(
         verbose_name="설문 시작 일시",
         null=True,
     )
