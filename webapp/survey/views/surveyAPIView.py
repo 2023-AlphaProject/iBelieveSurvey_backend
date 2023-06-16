@@ -6,7 +6,11 @@ from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework.parsers import FormParser, MultiPartParser
 
 from survey.models import Survey
+from user.models import User
+from survey.permissions import IsSurveyOwnerOrReadOnly
 from survey.serializers import SurveySerializer
+import jwt
+from django.contrib.auth import authenticate, login
 
 
 class WinningPercentageOrderingFilter(filters.OrderingFilter):

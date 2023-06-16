@@ -1,3 +1,4 @@
+import profile
 import requests
 from django.shortcuts import redirect
 from rest_framework.decorators import api_view, permission_classes
@@ -11,7 +12,9 @@ from user.models import User
 from config.settings.base import SECRET_KEY
 from django.http import HttpResponse
 import jwt
-
+from django.contrib.auth import authenticate, login
+from user.serializers import UserViewSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
 
 @api_view(['GET'])
 @permission_classes([AllowAny, ])
@@ -47,6 +50,7 @@ def kakaoCallback(request):
     print("user_info_response", end="")
     print(user_info_response)
     profile_json = user_info_response.json()
+    print("profile_json!!!!!!!!", profile_json)
 
     kakao_account = profile_json.get("kakao_account")
     kakaoId = profile_json.get("id")
@@ -55,28 +59,21 @@ def kakaoCallback(request):
     if email is None:
         return JsonResponse({'err_msg': 'failed to get email'}, status=status.HTTP_400_BAD_REQUEST)
 
-    # 카카오톡 계정이 DB에 저장되어 있는지 확인
     if User.objects.filter(kakaoId=kakaoId).exists():
         user_info = User.objects.get(kakaoId=kakaoId)
-        encoded_jwt = jwt.encode({'id': user_info.kakaoId}, SECRET_KEY, algorithm='HS256')  # jwt토큰 발행
-        return HttpResponse(f'id:{user_info.kakaoId}, token:{encoded_jwt}, exist:true')
+        refresh = RefreshToken.for_user(user_info)
 
-    # 저장되어 있지 않다면 회원가입
+        return HttpResponse(f'id:{user_info.kakaoId}, token:{str(refresh.access_token)}, email:{email}, exist:true')
+
     else:
         User(
             kakaoId=kakaoId,
             email=email,
         ).save()
         user_info = User.objects.get(kakaoId=kakaoId)
-        encoded_jwt = jwt.encode({'id': user_info.kakaoId}, SECRET_KEY, algorithm='HS256')
-        return HttpResponse(f'id:{user_info.kakaoId}, token:{encoded_jwt}, exist:true')
+        serializer = UserViewSerializer(data=user_info)
+        if not serializer.is_valid():
+            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# @api_view(['POST'])
-# @permission_classes([AllowAny, ])
-# def logout(self,request):
-#         res = Response()
-#         res.delete_cookie('encoded_jwt')
-#         res.data = {
-#             "message" : 'success'
-#         }
-#         return res
+        refresh = RefreshToken.for_user(user_info)
+        return HttpResponse(f'id:{user_info.kakaoId}, token:{str(refresh.access_token)}, email:{email}, exist:true')
