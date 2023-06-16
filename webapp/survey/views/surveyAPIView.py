@@ -82,29 +82,6 @@ class SurveyAPIView(CreateAPIView, ListAPIView):
             return Response({'message': '토큰 없음'}, status=200)
         else :
             return Response({'message': '토큰 있음!!!!'}, status=200)
-            
-
-
-
-        # if request.user.is_authenticated:
-        #     return super().create(request, *args, **kwargs)
-        # else:
-        #     return Response({'error': '로그인이 필요합니다.'}, status=400)
-
-            # token = request.META.get('HTTP_AUTHORIZATION', '').split(' ')[1]  # JWT 토큰 추출
-            # try:
-            #     payload = jwt.decode(token, 'SECRET_KEY', algorithms=['HS256'])  # 토큰 파싱
-            #     print("토큰 test~ : payload", payload)
-            #     user_id = payload['id']  
-            #     user = User.objects.get(id=user_id)  
-            #     user = authenticate(request, user=user)  
-            #     if user is not None:
-            #         login(request, user)  # 인증된 사용자로 로그인
-            #         return super().create(request, *args, **kwargs)
-            # except jwt.DecodeError:
-            #     pass
-
-            # return Response({'error': '로그인이 필요합니다.'}, status=400)
 
     def get_queryset(self):
         return Survey.objects.annotate(participants=Count('participant'))
