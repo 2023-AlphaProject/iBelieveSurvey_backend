@@ -1,9 +1,12 @@
+import os
+from datetime import datetime
+
+import boto3
 from django.db.models import Count
-from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from rest_framework.generics import CreateAPIView, ListAPIView
-from rest_framework.parsers import FormParser, MultiPartParser
+from rest_framework.response import Response
 
 from survey.models import Survey
 from user.models import User
@@ -25,45 +28,19 @@ class WinningPercentageOrderingFilter(filters.OrderingFilter):
                 return queryset.order_by(*ordering)
 
 
-class ParticipantsFilter(filters.BaseFilterBackend):
-    def filter_queryset(self, request, queryset, view):
-        if 'under_ten' in request.query_params:
-            return queryset.annotate(participant_count=Count('participant')).filter(participant_count__lt=10)
-        if 'under_hundred' in request.query_params:
-            return queryset.annotate(participant_count=Count('participant')).filter(participant_count__lt=100).filter(
-                participant_count__gte=10)
-        if 'over_hundred' in request.query_params:
-            return queryset.annotate(participant_count=Count('participant')).filter(participant_count__gte=100)
-        return queryset
-
-
-class SurveyStatusFilter(filters.BaseFilterBackend):
-    def filter_queryset(self, request, queryset, view):
-        now = timezone.now()
-        if 'ongoing' in request.query_params:
-            return queryset.filter(started_at__lte=now, end_at__gte=now)
-        if 'ended' in request.query_params:
-            return queryset.filter(end_at__lt=now)
-        return queryset
-
-
 class SurveyAPIView(CreateAPIView, ListAPIView):
     queryset = Survey.objects.all()
     serializer_class = SurveySerializer
     filter_backends = [
         DjangoFilterBackend,
         filters.SearchFilter,
-        ParticipantsFilter,
-        SurveyStatusFilter,
         WinningPercentageOrderingFilter,
     ]
     ordering = ['id']
     ordering_fields = ['started_at', 'end_at', 'participants', 'winningPercentage']
-    filterset_fields = ['title', 'category', 'is_paid', 'is_survey_hidden']
+    filterset_fields = ['title', 'category', 'is_paid', 'is_survey_hidden', ]
     search_fields = ['title']
-    parser_classes = (FormParser, MultiPartParser)
-
-    # permission_classes = [IsSurveyOwnerOrReadOnly]
+    permission_classes = [IsSurveyOwnerOrReadOnly]
 
     def get(self, request, *args, **kwargs):
         """
@@ -78,17 +55,15 @@ class SurveyAPIView(CreateAPIView, ListAPIView):
         return super().post(request, *args, **kwargs)
 
     def perform_create(self, serializer):
-        try:
-            serializer.save(writer=self.request.user)
-        except:
-            serializer.save(writer=None)
+        serializer.save(writer=self.request.user)
 
-    # def create(self, request, *args, **kwargs):
-    #     if request.user.is_authenticated:
-    #         return super().create(request, *args, **kwargs)
-    #     else:
-    #         return Response({'error': '로그인이 필요합니다.'}, status=400)
+    def create(self, request, *args, **kwargs):
+        access = request.user
+        if not access:
+            return Response({'message': '로그인이 필요합니다. '}, status=400)
+        else :
+            # return Response({'message': '인증된 사용자입니다.'}, status=200)
+            return super().create(request, *args, **kwargs)
 
-    # def get_queryset(self):
-    #     queryset = Survey.objects.annotate(participants=Count('participant'))
-    #     return queryset
+    def get_queryset(self):
+        return Survey.objects.annotate(participants=Count('participant'))

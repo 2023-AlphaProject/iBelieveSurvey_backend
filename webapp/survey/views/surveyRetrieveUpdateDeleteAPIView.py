@@ -8,7 +8,7 @@ from survey.serializers import *
 
 
 class SurveyRetrieveUpdateDestoryAPIView(RetrieveUpdateDestroyAPIView):
-    # permission_classes = [IsSurveyOwnerOrReadOnly, IsAuthenticated]
+    permission_classes = [IsSurveyOwnerOrReadOnly, IsAuthenticated]
     queryset = Survey.objects.all()
     lookup_url_kwarg = 'survey_id'
 
