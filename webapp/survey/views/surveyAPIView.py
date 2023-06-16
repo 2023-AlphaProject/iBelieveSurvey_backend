@@ -12,7 +12,6 @@ from survey.models import Survey
 from user.models import User
 from survey.permissions import IsSurveyOwnerOrReadOnly
 from survey.serializers import SurveySerializer
-import jwt
 from django.contrib.auth import authenticate, login
 
 
