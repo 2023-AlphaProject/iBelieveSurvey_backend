@@ -79,9 +79,10 @@ class SurveyAPIView(CreateAPIView, ListAPIView):
     def create(self, request, *args, **kwargs):
         access = request.user
         if not access:
-            return Response({'message': '토큰 없음'}, status=200)
+            return Response({'message': '로그인이 필요합니다. '}, status=400)
         else :
-            return Response({'message': '토큰 있음!!!!'}, status=200)
+            # return Response({'message': '인증된 사용자입니다.'}, status=200)
+            return super().create(request, *args, **kwargs)
 
     def get_queryset(self):
         return Survey.objects.annotate(participants=Count('participant'))

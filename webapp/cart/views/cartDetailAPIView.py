@@ -24,7 +24,8 @@ class CartDetailAPIView(RetrieveUpdateDestroyAPIView):
         """
         self.check_cart_exist()
 
-        if not self.request.user.is_authenticated:
+        access = request.user
+        if not access:
             return Response({"error": "장바구니를 조회하기 위해선 로그인이 필요합니다."})
 
         if request.user != self.get_survey().writer:
@@ -39,7 +40,7 @@ class CartDetailAPIView(RetrieveUpdateDestroyAPIView):
         self.check_cart_exist()
 
         # 애초에 get 예외처리에 걸리지만, 일단 예외처리함
-        if not self.request.user.is_authenticated:
+        if not request.user:
             return Response({"error": "장바구니를 수정하기 위해선 로그인이 필요합니다."})
 
         if request.user != self.get_survey().writer:
@@ -57,7 +58,7 @@ class CartDetailAPIView(RetrieveUpdateDestroyAPIView):
         self.check_cart_exist()
 
         # 애초에 get 예외처리에 걸리지만, 일단 예외처리함
-        if not self.request.user.is_authenticated:
+        if not request.user:
             return Response({"error": "장바구니를 삭제하기 위해선 로그인이 필요합니다."})
 
         if request.user != self.get_survey().writer:

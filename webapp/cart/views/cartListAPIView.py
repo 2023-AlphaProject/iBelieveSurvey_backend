@@ -16,7 +16,8 @@ class CartListAPIView(ListCreateAPIView):
         """
         설문 작성자가 장바구니에 담았던 모든 템플릿 묶음들을 반환합니다.
         """
-        if not request.user.is_authenticated:
+        access = request.user
+        if not access:
             return Response({"error": "장바구니를 조회하기 위해선 로그인이 필요합니다."})
 
         survey = self.get_survey()
@@ -29,7 +30,8 @@ class CartListAPIView(ListCreateAPIView):
         """
         설문 작성자가 해당 설문의 장바구니에 템플릿 묶음을 생성합니다.
         """
-        if not request.user.is_authenticated:
+        access = request.user
+        if not access:
             return Response({"error": "장바구니에 기프티콘을 담기 위해선 로그인이 필요합니다."})
 
         # 애초에 get 예외처리에 걸리지만, 일단 예외처리함

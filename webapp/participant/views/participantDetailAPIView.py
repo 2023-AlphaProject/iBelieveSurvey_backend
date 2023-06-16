@@ -19,7 +19,7 @@ class ParticipantDetailAPIView(RetrieveAPIView, UpdateAPIView):
         except:
             return Response({"error": "답변이 존재하지 않습니다."})
 
-        if not self.request.user.is_authenticated:
+        if not request.user:
             return Response({"error": "설문에 답변하기 위해선 로그인이 필요합니다."})
 
         if request.user not in [participant.user, self.get_survey().writer]:
