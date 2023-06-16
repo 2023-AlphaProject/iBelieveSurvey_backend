@@ -24,11 +24,11 @@ class CartDetailAPIView(RetrieveUpdateDestroyAPIView):
         """
         self.check_cart_exist()
 
-        if not self.request.user.is_authenticated:
-            return Response({"error": "장바구니를 조회하기 위해선 로그인이 필요합니다."})
-
-        if request.user != self.get_survey().writer:
-            return Response({"error": "설문 작성자 본인만이 해당 설문의 장바구니를 조회할 수 있습니다."})
+        # if not self.request.user.is_authenticated:
+        #     return Response({"error": "장바구니를 조회하기 위해선 로그인이 필요합니다."})
+        #
+        # if request.user != self.get_survey().writer:
+        #     return Response({"error": "설문 작성자 본인만이 해당 설문의 장바구니를 조회할 수 있습니다."})
 
         return self.retrieve(request, *args, **kwargs)
 
@@ -39,14 +39,14 @@ class CartDetailAPIView(RetrieveUpdateDestroyAPIView):
         self.check_cart_exist()
 
         # 애초에 get 예외처리에 걸리지만, 일단 예외처리함
-        if not self.request.user.is_authenticated:
-            return Response({"error": "장바구니를 수정하기 위해선 로그인이 필요합니다."})
-
-        if request.user != self.get_survey().writer:
-            return Response({"error": "설문 작성자 본인만이 해당 설문의 장바구니를 수정할 수 있습니다."})
-
-        if not self.get_survey().is_idle:
-            return Response({"error": "설문이 시작된 후에는 장바구니를 수정할 수 없습니다."})
+        # if not self.request.user.is_authenticated:
+        #     return Response({"error": "장바구니를 수정하기 위해선 로그인이 필요합니다."})
+        #
+        # if request.user != self.get_survey().writer:
+        #     return Response({"error": "설문 작성자 본인만이 해당 설문의 장바구니를 수정할 수 있습니다."})
+        #
+        # if not self.get_survey().is_idle:
+        #     return Response({"error": "설문이 시작된 후에는 장바구니를 수정할 수 없습니다."})
 
         return self.update(request, *args, **kwargs)
 
@@ -57,11 +57,11 @@ class CartDetailAPIView(RetrieveUpdateDestroyAPIView):
         self.check_cart_exist()
 
         # 애초에 get 예외처리에 걸리지만, 일단 예외처리함
-        if not self.request.user.is_authenticated:
-            return Response({"error": "장바구니를 삭제하기 위해선 로그인이 필요합니다."})
-
-        if request.user != self.get_survey().writer:
-            return Response({"error": "설문 작성자 본인만이 해당 설문의 장바구니를 삭제할 수 있습니다."})
+        # if not self.request.user.is_authenticated:
+        #     return Response({"error": "장바구니를 삭제하기 위해선 로그인이 필요합니다."})
+        #
+        # if request.user != self.get_survey().writer:
+        #     return Response({"error": "설문 작성자 본인만이 해당 설문의 장바구니를 삭제할 수 있습니다."})
 
         return self.destroy(request, *args, **kwargs)
 
