@@ -1,5 +1,6 @@
 from rest_framework import filters
 from rest_framework.generics import ListCreateAPIView
+from rest_framework.response import Response
 
 from participant.models import Participant
 from participant.serializers.participantSerializer import ParticipantSerializer
