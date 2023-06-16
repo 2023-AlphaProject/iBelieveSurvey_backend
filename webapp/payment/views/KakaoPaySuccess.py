@@ -1,6 +1,7 @@
+from datetime import date
+
 from django.conf import settings
 from django.shortcuts import redirect
-from django.utils import timezone
 from rest_framework.views import APIView
 
 from cart.models.cart import Cart
@@ -16,7 +17,7 @@ class KakaoPaySuccess(APIView):
         survey = Survey.objects.get(id=survey_id)
         survey.is_idle = False
         survey.is_paid = True
-        survey.started_at = timezone.now()
+        survey.started_at = date.today()
         survey.save()
 
         carts = Cart.objects.filter(survey=survey)

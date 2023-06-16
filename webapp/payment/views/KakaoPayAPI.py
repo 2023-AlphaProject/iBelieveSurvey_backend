@@ -1,15 +1,14 @@
 import os
 
 import requests
+from django.conf import settings
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.conf import settings
 
 from cart.models import Cart
 from survey.models import Survey
 
 BASEURL = settings.BACKEND_URL
-
 
 class KakaoPayAPI(APIView):
 
