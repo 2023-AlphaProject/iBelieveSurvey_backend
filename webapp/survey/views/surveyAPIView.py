@@ -77,7 +77,7 @@ class SurveyAPIView(CreateAPIView, ListAPIView):
         serializer.save(writer=self.request.user, thumbnail=image_url)
 
     def create(self, request, *args, **kwargs):
-        access = request.auth
+        access = request.user
         if not access:
             return Response({'message': '토큰 없음'}, status=200)
         else :

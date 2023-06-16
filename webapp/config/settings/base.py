@@ -55,6 +55,7 @@ DEFAULT_APPS = [
     'storages',
     'rest_framework_simplejwt',
     'rest_framework.authtoken',
+    'rest_auth',
 ]
 
 USER_APPS = [
@@ -209,5 +210,16 @@ else:
 
 FRONTEND_URL = "https://ibelievesurvey.com/"
 BACKEND_URL = "https://api.ibelievesurvey.com/"
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny', # 누구나 접근
+    ),
+}
+
+REST_USE_JWT = True
 
 

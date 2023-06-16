@@ -1,3 +1,4 @@
+import profile
 import requests
 from django.shortcuts import redirect
 from rest_framework.decorators import api_view, permission_classes
@@ -45,9 +46,12 @@ def kakaoCallback(request):
                                       headers={"Authorization": f'Bearer ${access_token}'})
 
     profile_json = user_info_response.json()
+    print("profile_json!!!!!!!!", profile_json)
 
     kakao_account = profile_json.get("kakao_account")
     kakaoId = profile_json.get("id")
+    print("kakao_account!!!!!!!!!!!!!!!!!!!!", kakao_account)
+    print("profile_json!!!!!!!!", profile_json)
     email = kakao_account.get("email", None)
 
     if email is None:
