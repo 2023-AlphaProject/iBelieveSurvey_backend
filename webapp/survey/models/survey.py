@@ -99,7 +99,7 @@ class Survey(BaseModel):
         if self.end_at is None:
             return False
 
-        return self.end_at < date.today()
+        return self.end_at <= date.today()
 
     @property
     def winningPercentage(self):
