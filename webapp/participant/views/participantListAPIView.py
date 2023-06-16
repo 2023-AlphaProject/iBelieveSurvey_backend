@@ -1,6 +1,5 @@
 from rest_framework import filters
 from rest_framework.generics import ListCreateAPIView
-from rest_framework.response import Response
 
 from participant.models import Participant
 from participant.serializers.participantSerializer import ParticipantSerializer
@@ -58,6 +57,10 @@ class ParticipantListAPIView(ListCreateAPIView):
             return Response({"error": "설문이 진행 중이 아니므로 답변할 수 없습니다."})
 
         return self.create(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        survey = self.get_survey()
+        serializer.save(survey=survey, user=self.request.user)
 
     def get_survey(self):
         survey_id = self.kwargs['survey_id']

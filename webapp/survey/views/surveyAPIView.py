@@ -1,12 +1,9 @@
-import os
-from datetime import datetime
-
-import boto3
 from django.db.models import Count
+from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from rest_framework.generics import CreateAPIView, ListAPIView
-from rest_framework.response import Response
+from rest_framework.parsers import FormParser, MultiPartParser
 
 from survey.models import Survey
 from user.models import User
@@ -28,19 +25,45 @@ class WinningPercentageOrderingFilter(filters.OrderingFilter):
                 return queryset.order_by(*ordering)
 
 
+class ParticipantsFilter(filters.BaseFilterBackend):
+    def filter_queryset(self, request, queryset, view):
+        if 'under_ten' in request.query_params:
+            return queryset.annotate(participant_count=Count('participant')).filter(participant_count__lt=10)
+        if 'under_hundred' in request.query_params:
+            return queryset.annotate(participant_count=Count('participant')).filter(participant_count__lt=100).filter(
+                participant_count__gte=10)
+        if 'over_hundred' in request.query_params:
+            return queryset.annotate(participant_count=Count('participant')).filter(participant_count__gte=100)
+        return queryset
+
+
+class SurveyStatusFilter(filters.BaseFilterBackend):
+    def filter_queryset(self, request, queryset, view):
+        now = timezone.now()
+        if 'ongoing' in request.query_params:
+            return queryset.filter(started_at__lte=now, end_at__gte=now)
+        if 'ended' in request.query_params:
+            return queryset.filter(end_at__lt=now)
+        return queryset
+
+
 class SurveyAPIView(CreateAPIView, ListAPIView):
     queryset = Survey.objects.all()
     serializer_class = SurveySerializer
     filter_backends = [
         DjangoFilterBackend,
         filters.SearchFilter,
+        ParticipantsFilter,
+        SurveyStatusFilter,
         WinningPercentageOrderingFilter,
     ]
     ordering = ['id']
     ordering_fields = ['started_at', 'end_at', 'participants', 'winningPercentage']
-    filterset_fields = ['title', 'category', 'is_paid', 'is_survey_hidden', ]
+    filterset_fields = ['title', 'category', 'is_paid', 'is_survey_hidden']
     search_fields = ['title']
-    permission_classes = [IsSurveyOwnerOrReadOnly]
+    parser_classes = (FormParser, MultiPartParser)
+
+    # permission_classes = [IsSurveyOwnerOrReadOnly]
 
     def get(self, request, *args, **kwargs):
         """
@@ -55,34 +78,17 @@ class SurveyAPIView(CreateAPIView, ListAPIView):
         return super().post(request, *args, **kwargs)
 
     def perform_create(self, serializer):
-        s3_client = boto3.client(
-            's3',
-            aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"),
-            aws_secret_access_key_id=os.environ.get("AWS_SECRET_ACCESS_KEY")
-        )
+        try:
+            serializer.save(writer=self.request.user)
+        except:
+            serializer.save(writer=None)
 
-        image = self.request.FILES['filename']
-        image_time = (str(datetime.now())).replace(" ", "")
-        image_type = (image.content_type).split("/")[1]
-        aws_storage_bucket_name = os.environ.get("AWS_STORAGE_BUCKET_NAME")
-        s3_client.upload_fileobj(
-            image,  # 업로드할 파일 객체
-            aws_storage_bucket_name,  # S3 버킷 이름
-            image_time + "." + image_type,  # S3 버킷에 저장될 파일의 경로와 이름
-            ExtraArgs={"ContentType": image.content_type}  # 파일의 ContentType 설정
-        )
-        image_url = os.environ.get("S3_URL") + image_time + "." + image_type
-        image_url = image_url.replace(" ", "/")
+    # def create(self, request, *args, **kwargs):
+    #     if request.user.is_authenticated:
+    #         return super().create(request, *args, **kwargs)
+    #     else:
+    #         return Response({'error': '로그인이 필요합니다.'}, status=400)
 
-        serializer.save(writer=self.request.user, thumbnail=image_url)
-
-    def create(self, request, *args, **kwargs):
-        access = request.user
-        if not access:
-            return Response({'message': '로그인이 필요합니다. '}, status=400)
-        else :
-            # return Response({'message': '인증된 사용자입니다.'}, status=200)
-            return super().create(request, *args, **kwargs)
-
-    def get_queryset(self):
-        return Survey.objects.annotate(participants=Count('participant'))
+    # def get_queryset(self):
+    #     queryset = Survey.objects.annotate(participants=Count('participant'))
+    #     return queryset

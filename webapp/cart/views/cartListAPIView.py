@@ -4,13 +4,17 @@ from rest_framework.response import Response
 from cart.models import Cart
 from cart.serializers import CartListSerializer
 from survey.models import Survey
-from template.models import Template
 
 
 class CartListAPIView(ListCreateAPIView):
     serializer_class = CartListSerializer
     ordering = ['template']
-    queryset = Cart.objects.all()
+
+    def get_queryset(self):
+        survey_id = self.kwargs['survey_id']
+        queryset = Cart.objects.filter(survey_id=survey_id)
+
+        return queryset
 
     def get(self, request, *args, **kwargs):
         """

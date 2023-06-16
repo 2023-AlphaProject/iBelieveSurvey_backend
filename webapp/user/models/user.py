@@ -90,13 +90,17 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def hidden_realName(self):
-        if self.realName!=None:
+        if self.realName is not None:
             if len(self.realName) == 2:
                 return self.realName[0] + "*"
             else:
                 return self.realName[0] + "*" * (len(self.realName) - 2) + self.realName[-1]
+        else:
+            return None
 
     @property
     def hidden_phoneNumber(self):
-        if self.phoneNumber!=None:
+        if self.phoneNumber is not None:
             return self.phoneNumber[:3] + "-" + "*" * 4 + "-" + self.phoneNumber[-4:]
+        else:
+            return None
