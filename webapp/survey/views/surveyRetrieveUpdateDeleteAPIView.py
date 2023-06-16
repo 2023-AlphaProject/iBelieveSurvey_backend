@@ -32,11 +32,12 @@ class SurveyRetrieveUpdateDestoryAPIView(RetrieveUpdateDestroyAPIView):
             return SurveySerializer
 
     def get(self, request, *args, **kwargs):
-        """
-        설문조사를 조회합니다.
-        로그인한 유저만 조회 가능합니다.
-        """
-        return super().get(request, *args, **kwargs)
+        access = request.user
+        if not access:
+            return Response({'message': '로그인한 유저만 설문 조회 가능합니다. '}, status=400)
+        else :
+            # return Response({'message': '인증된 사용자입니다.'}, status=200)
+            return super().get(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
         """
