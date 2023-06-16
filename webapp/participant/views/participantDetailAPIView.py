@@ -10,6 +10,13 @@ class ParticipantDetailAPIView(RetrieveAPIView, UpdateAPIView):
     queryset = Participant.objects.all()
     serializer_class = ParticipantSerializer
 
+    def get_object(self):
+        pk = self.kwargs['pk']
+        try:
+            return Participant.objects.get(pk=pk)
+        except Participant.DoesNotExist:
+            return Response({"error": "설문 답변이 존재하지 않습니다."})
+
     def get(self, request, *args, **kwargs):
         """
         설문 작성자 또는 참여자가 해당 설문에 대한 특정 답변들을 조회합니다.
