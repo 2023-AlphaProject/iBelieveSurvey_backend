@@ -83,7 +83,9 @@ class HiddenEndSurveySerializer(serializers.ModelSerializer):
         for data in serializer_data:
             order = Order.objects.filter(cart__survey=obj, receiver__user__id=data['id']).first()
             data['brand_name'] = order.cart.template.brand_name
+            data['brand_image'] = order.cart.template.brand_image_url
             data['product_name'] = order.cart.template.product_name
+            data['product_image'] = order.cart.template.product_thumb_image_url
 
         return serializer.data
 
