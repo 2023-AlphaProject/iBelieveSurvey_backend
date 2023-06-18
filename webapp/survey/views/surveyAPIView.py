@@ -1,5 +1,5 @@
 import os
-from datetime import datetime, timezone
+from datetime import date
 
 import boto3
 from django.db.models import Count
@@ -40,7 +40,7 @@ class ParticipantsFilter(filters.BaseFilterBackend):
 
 class SurveyStatusFilter(filters.BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
-        now = timezone.now()
+        now = date.today()
         if 'ongoing' in request.query_params:
             return queryset.filter(started_at__lte=now, end_at__gte=now)
         if 'ended' in request.query_params:
