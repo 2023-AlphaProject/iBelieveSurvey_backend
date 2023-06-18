@@ -9,7 +9,7 @@ from cart.models import Cart
 from survey.models import Survey
 
 # BASEURL = settings.BACKEND_URL
-BASEURL = settings.FRONTEND_URL_LOCAL
+BASEURL = settings.FRONTEND_URL_LOCAL + "/new/payment"
 
 class KakaoPayAPI(APIView):
 
