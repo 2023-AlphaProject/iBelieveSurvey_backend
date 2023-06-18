@@ -57,6 +57,10 @@ class CartListAPIView(ListCreateAPIView):
 
         return self.create(request, *args, **kwargs)
 
+    def preform_create(self, serializer):
+        survey = self.get_survey()
+        serializer.save(survey=survey)
+
     def get_survey(self):
         survey_id = self.kwargs['survey_id']
         survey = Survey.objects.get(id=survey_id)

@@ -1,11 +1,11 @@
 from rest_framework import serializers
 
 from cart.models import Cart
-from template.models import Template
+from template.serializers import TemplateSerializer
 
 
 class CartListSerializer(serializers.ModelSerializer):
-    template = serializers.PrimaryKeyRelatedField(queryset=Template.objects.all())
+    template = TemplateSerializer()
 
     total_price = serializers.SerializerMethodField()
     result_price = serializers.SerializerMethodField()
