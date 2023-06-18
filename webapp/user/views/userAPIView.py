@@ -9,11 +9,11 @@ class UpdateUserAPIView(RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UpdateUserSerializer
 
-    def get_object(self):
-        return self.request.user
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
     def update(self, request, *args, **kwargs):
-        instance = request.user
+        instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
