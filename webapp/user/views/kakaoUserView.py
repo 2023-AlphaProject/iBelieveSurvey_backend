@@ -60,7 +60,7 @@ def kakaoCallback(request):
     if User.objects.filter(kakaoId=kakaoId).exists():
         user_info = User.objects.get(kakaoId=kakaoId)
         refresh = RefreshToken.for_user(user_info)
-
+        isMember = True
         return HttpResponse(f'user:{user_info}, token:{str(refresh.access_token)}, email:{email}, exist:true, isMember:{isMember}')
 
     else:

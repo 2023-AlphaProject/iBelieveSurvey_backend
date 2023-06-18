@@ -27,4 +27,4 @@ class KakaoPaySuccess(APIView):
                 for _ in range(cart.quantity):
                     Order.objects.create(cart=cart, receiver=None)
 
-        return redirect(settings.FRONTEND_URL + "/surveys/" + str(survey_id))
+        return redirect(settings.FRONTEND_URL + "survey/" + str(survey_id))
