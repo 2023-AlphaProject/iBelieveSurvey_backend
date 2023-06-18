@@ -8,8 +8,8 @@ from rest_framework.views import APIView
 from cart.models import Cart
 from survey.models import Survey
 
-# BASEURL = settings.BACKEND_URL
-BASEURL = settings.FRONTEND_URL_LOCAL + "/new/payment"
+BASEURL = settings.BACKEND_URL
+BASEURL_FRONT = settings.FRONTEND_URL_LOCAL # 배포로 수정 필요
 
 class KakaoPayAPI(APIView):
 
@@ -41,8 +41,8 @@ class KakaoPayAPI(APIView):
             'total_amount': total_amount,
             'tax_free_amount': 0,
             'approval_url': f'{BASEURL}surveys/{survey_id}/carts/payments/success',
-            'fail_url': f'{BASEURL}',
-            'cancel_url': f'{BASEURL}',
+            'fail_url': f'{BASEURL_FRONT}survey/new/payment',
+            'cancel_url': f'{BASEURL_FRONT}survey/new/payment',
         }
         response = requests.post(url, headers=headers, params=params)
         result = response.json()
