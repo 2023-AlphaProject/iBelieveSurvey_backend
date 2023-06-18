@@ -78,6 +78,13 @@ class HiddenEndSurveySerializer(serializers.ModelSerializer):
         winnerUsers = User.objects.filter(participant__in=winnerParticipant)
 
         serializer = ReceiverSerializer(winnerUsers, many=True)
+        serializer_data = serializer.data
+
+        for data in serializer_data:
+            order = Order.objects.filter(cart__survey=obj, receiver__user__id=data['id']).first()
+            data['brand_name'] = order.cart.template.brand_name
+            data['product_name'] = order.cart.template.product_name
+
         return serializer.data
 
     def get_category_name(self, obj):
