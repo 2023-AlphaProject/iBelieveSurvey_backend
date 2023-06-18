@@ -186,6 +186,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',  # 누구나 접근
+        'rest_framework.authentication.SessionAuthentication',
     ),
 }
 
