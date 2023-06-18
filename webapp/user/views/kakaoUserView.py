@@ -73,4 +73,4 @@ def kakaoCallback(request):
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         refresh = RefreshToken.for_user(user_info)
-        return HttpResponse(f'id:{user_info.kakaoId}, token:{str(refresh.access_token)}, email:{email}, exist:true')
+        return HttpResponse(f'id:{user_info.kakaoId}, token:{str(refresh.access_token)}, email:{email}, exist:false')
