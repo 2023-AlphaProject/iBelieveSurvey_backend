@@ -51,7 +51,7 @@ class CartListAPIView(ListCreateAPIView):
             return Response({"error": "장바구니에 기프티콘을 담아야 합니다."})
 
         try:
-            template = Template.objects.get(id=template_id)
+            template = Template.objects.get(id=template_id).template_trace_id
         except Template.DoesNotExist:
             return Response({"error": "유효하지 않은 템플릿입니다."})
 

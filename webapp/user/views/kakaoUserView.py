@@ -30,6 +30,7 @@ def kakaoGetLogin(request):
 def kakaoCallback(request):
     url = "https://kauth.kakao.com/oauth/token"
     code = request.GET.get("code")
+    isMember=True
     if code is None:
         raise Exception("code is none")
 
@@ -60,7 +61,7 @@ def kakaoCallback(request):
         user_info = User.objects.get(kakaoId=kakaoId)
         refresh = RefreshToken.for_user(user_info)
 
-        return HttpResponse(f'user:{user_info}, token:{str(refresh.access_token)}, email:{email}, exist:true')
+        return HttpResponse(f'user:{user_info}, token:{str(refresh.access_token)}, email:{email}, exist:true, isMember:{isMember}')
 
     else:
         User(
@@ -69,8 +70,9 @@ def kakaoCallback(request):
         ).save()
         user_info = User.objects.get(kakaoId=kakaoId)
         serializer = UserViewSerializer(data=user_info)
-        if not serializer.is_valid():
-            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # if not serializer.is_valid():
+        #     return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         refresh = RefreshToken.for_user(user_info)
-        return HttpResponse(f'user:{user_info}, token:{str(refresh.access_token)}, email:{email}, exist:false')
+        isMember = False
+        return HttpResponse(f'user:{user_info}, token:{str(refresh.access_token)}, email:{email}, exist:true, isMember:{isMember}')
