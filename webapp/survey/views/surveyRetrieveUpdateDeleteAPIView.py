@@ -8,7 +8,7 @@ from survey.serializers import *
 
 
 class SurveyRetrieveUpdateDestoryAPIView(RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsSurveyOwnerOrReadOnly, IsAuthenticated]
+    permission_classes = [IsSurveyOwnerOrReadOnly]
     queryset = Survey.objects.all()
     lookup_url_kwarg = 'survey_id'
 
@@ -30,6 +30,16 @@ class SurveyRetrieveUpdateDestoryAPIView(RetrieveUpdateDestroyAPIView):
             return NotHiddenEndSurveySerializer
         else:
             return SurveySerializer
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            permission_classes = [IsSurveyOwnerOrReadOnly]
+        elif self.request.method in ['PUT', 'PATCH', 'DELETE']:
+            permission_classes = [IsSurveyOwnerOrReadOnly, IsAuthenticated]
+        else:
+            permission_classes = self.permission_classes
+
+        return [permission() for permission in permission_classes]
 
     def get(self, request, *args, **kwargs):
         """
