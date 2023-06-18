@@ -179,6 +179,7 @@ CRONJOBS = [
 ]
 
 FRONTEND_URL = "https://ibelievesurvey.com/"
+FRONTEND_URL_LOCAL = "http://localhost:3000/"
 BACKEND_URL = "https://api.ibelievesurvey.com/"
 
 REST_FRAMEWORK = {
