@@ -2,7 +2,7 @@ from django.apps import apps
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Sum
-from datetime import date
+from datetime import date, timedelta
 from config.baseModel import BaseModel
 from config.exceptions.handler import validate_multiple
 from user.models import User
@@ -92,14 +92,14 @@ class Survey(BaseModel):
         if self.started_at is None or self.end_at is None:
             return False
         now_date = date.today()
-        return self.started_at is not None and self.started_at <= now_date and self.end_at >= now_date
+        return self.started_at is not None and self.started_at <= now_date <= self.end_at
 
     @property
     def is_end(self):
         if self.end_at is None:
             return False
 
-        return self.end_at <= date.today()
+        return self.end_at < date.today()
 
     @property
     def winningPercentage(self):
@@ -127,9 +127,9 @@ class Survey(BaseModel):
 
     def validate_end_at_field(self):
         if self.started_at is not None and self.end_at is not None and self.started_at > self.end_at:
-            raise ValidationError('설문 종료 일시는 설문 시작 일시보다 빠를 수 없습니다.')
-        if self.end_at is not None and date.today() > self.end_at:
-            raise ValidationError('설문 종료 일시는 현재 시간 보다 빠를 수 없습니다.')
+            raise ValidationError('설문 종료 날짜는 설문 시작 날짜보다 빠를 수 없습니다.')
+        if self.end_at is not None and date.today() > self.end_at + timedelta(days=1):
+            raise ValidationError('설문 종료 날짜는 현재 날짜보다 빠를 수 없습니다.')
 
     def save(self, *args, **kwargs):
         self.clean()
