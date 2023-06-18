@@ -17,3 +17,4 @@ class TemplateSerializer(serializers.ModelSerializer):
             'brand_image_url', 'product_price'
         ]
         # template_token을 제외한 모든 필드
+        depth = 2
