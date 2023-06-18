@@ -48,10 +48,8 @@ def kakaoCallback(request):
     user_info_response = requests.get('https://kapi.kakao.com/v2/user/me',
                                       headers={"Authorization": f'Bearer {access_token}'})
     profile_json = user_info_response.json()
-    print("profile_json!!", profile_json)
 
     kakao_account = profile_json.get("kakao_account")
-    print("kakao_account!!",kakao_account)
     kakaoId = profile_json.get("id")
     email = kakao_account.get("email", None)
 
