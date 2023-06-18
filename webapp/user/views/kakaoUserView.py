@@ -60,7 +60,15 @@ def kakaoCallback(request):
         user_info = User.objects.get(kakaoId=kakaoId)
         refresh = RefreshToken.for_user(user_info)
 
-        return HttpResponse(f'user_id:{user_info.kakaoId}, token:{str(refresh.access_token)}, email:{email}, exist:true')
+        serializer = UserViewSerializer(user_info)  # Serialize user_info
+        if not serializer.is_valid():
+            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(data={
+            'user_info': serializer.data,  # Send the serialized user_info object
+            'token': refresh.access_token,
+            'exist': True,
+        })
 
     else:
         User(
@@ -73,4 +81,13 @@ def kakaoCallback(request):
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         refresh = RefreshToken.for_user(user_info)
-        return HttpResponse(f'id:{user_info.kakaoId}, token:{str(refresh.access_token)}, email:{email}, exist:false')
+
+        serializer = UserViewSerializer(user_info)  # Serialize user_info
+        if not serializer.is_valid():
+            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(data={
+            'user_info': serializer.data,  # Send the serialized user_info object
+            'token': refresh.access_token,
+            'exist': False,
+        })
