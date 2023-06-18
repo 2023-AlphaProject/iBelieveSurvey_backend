@@ -1,5 +1,5 @@
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 
 import boto3
 from django.db.models import Count
@@ -26,6 +26,27 @@ class WinningPercentageOrderingFilter(filters.OrderingFilter):
             else:
                 return queryset.order_by(*ordering)
 
+class ParticipantsFilter(filters.BaseFilterBackend):
+    def filter_queryset(self, request, queryset, view):
+        if 'under_ten' in request.query_params:
+            return queryset.annotate(participant_count=Count('participant')).filter(participant_count__lt=10)
+        if 'under_hundred' in request.query_params:
+            return queryset.annotate(participant_count=Count('participant')).filter(participant_count__lt=100).filter(
+                participant_count__gte=10)
+        if 'over_hundred' in request.query_params:
+            return queryset.annotate(participant_count=Count('participant')).filter(participant_count__gte=100)
+        return queryset
+
+
+class SurveyStatusFilter(filters.BaseFilterBackend):
+    def filter_queryset(self, request, queryset, view):
+        now = timezone.now()
+        if 'ongoing' in request.query_params:
+            return queryset.filter(started_at__lte=now, end_at__gte=now)
+        if 'ended' in request.query_params:
+            return queryset.filter(end_at__lt=now)
+        return queryset
+
 
 class SurveyAPIView(CreateAPIView, ListAPIView):
     queryset = Survey.objects.all()
@@ -33,11 +54,13 @@ class SurveyAPIView(CreateAPIView, ListAPIView):
     filter_backends = [
         DjangoFilterBackend,
         filters.SearchFilter,
+        ParticipantsFilter,
+        SurveyStatusFilter,
         WinningPercentageOrderingFilter,
     ]
     ordering = ['id']
     ordering_fields = ['started_at', 'end_at', 'participants', 'winningPercentage']
-    filterset_fields = ['title', 'category', 'is_paid', 'is_survey_hidden', ]
+    filterset_fields = ['title', 'category', 'is_paid', 'is_survey_hidden']
     search_fields = ['title']
     permission_classes = [IsSurveyOwnerOrReadOnly]
 
