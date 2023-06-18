@@ -35,6 +35,7 @@ class CartListAPIView(ListCreateAPIView):
         """
         설문 작성자가 해당 설문의 장바구니에 템플릿 묶음을 생성합니다.
         """
+
         access = request.user
         if not access:
             return Response({"error": "장바구니에 기프티콘을 담기 위해선 로그인이 필요합니다."})
@@ -46,7 +47,7 @@ class CartListAPIView(ListCreateAPIView):
         if not self.get_survey().is_idle:
             return Response({"error": "설문이 시작된 후에는 장바구니에 기프티콘을 담을 수 없습니다."})
 
-        template_id = request.data.get("template")
+        template_id = request.data.get("template_id")
         if template_id is None:
             return Response({"error": "장바구니에 기프티콘을 담아야 합니다."})
 
@@ -57,7 +58,7 @@ class CartListAPIView(ListCreateAPIView):
 
         return self.create(request, *args, **kwargs)
 
-    def preform_create(self, serializer):
+    def perform_create(self, serializer):
         survey = self.get_survey()
         serializer.save(survey=survey)
 
