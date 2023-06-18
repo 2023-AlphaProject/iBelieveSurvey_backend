@@ -218,6 +218,6 @@ SIMPLE_JWT = {
 
     'JTI_CLAIM': 'jti',
 
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=180),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1)
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=720),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30)
 }
