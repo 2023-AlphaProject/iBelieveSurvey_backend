@@ -13,6 +13,7 @@ class Command(BaseCommand):
         template_token_num = len(template_token_dict_list)
 
         product_url_dict_list = [
+            {"퍼페티)츄파춥스":"7209457"},
             {"디카페인 카페 아메리카노 T":"4165669"},
             {"카라멜 마키아또 T":"4165635"},
             {"카페 라떼 T 2잔+슈크림 가득 바움쿠헨": "3818518"},
