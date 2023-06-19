@@ -1,7 +1,5 @@
-import os
 from datetime import date
 
-import boto3
 from django.db.models import Count
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
@@ -10,10 +8,8 @@ from rest_framework.response import Response
 
 from config.pagination import DefaultPagination
 from survey.models import Survey
-from user.models import User
 from survey.permissions import IsSurveyOwnerOrReadOnly
 from survey.serializers import SurveySerializer
-from django.contrib.auth import authenticate, login
 
 
 class WinningPercentageOrderingFilter(filters.OrderingFilter):
@@ -62,7 +58,7 @@ class SurveyAPIView(CreateAPIView, ListAPIView):
     ]
     ordering = ['id']
     ordering_fields = ['started_at', 'end_at', 'participants', 'winningPercentage']
-    filterset_fields = ['title', 'category', 'is_paid', 'is_survey_hidden']
+    filterset_fields = ['title', 'category__type', 'is_paid', 'is_survey_hidden']
     search_fields = ['title']
     permission_classes = [IsSurveyOwnerOrReadOnly]
     pagination_class = DefaultPagination
