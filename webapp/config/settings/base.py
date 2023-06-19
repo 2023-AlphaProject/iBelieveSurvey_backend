@@ -73,6 +73,13 @@ REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'config.exceptions.custom_exception_handler',
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_PAGINATION_CLASS': 'config.pagination.DefaultPagination',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',  # 누구나 접근
+    ),
 }
 
 MIDDLEWARE = [
@@ -177,20 +184,6 @@ JWT_AUTH = {
 CRONJOBS = [
     ('*/1 * * * *', 'order.cronAssignReceiver.assignReciver', '>> ../var/log/cron.log'),
 ]
-
-FRONTEND_URL = "https://ibelievesurvey.com/"
-FRONTEND_URL_LOCAL = "http://localhost:3000/"
-BACKEND_URL = "https://api.ibelievesurvey.com/"
-
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.AllowAny',  # 누구나 접근
-    ),
-}
 
 REST_USE_JWT = True
 
