@@ -1,5 +1,6 @@
 from rest_framework import mixins, viewsets
 
+from config.pagination import DefaultPagination
 from template.models import Template
 from template.serializers import TemplateSerializer
 
@@ -7,6 +8,7 @@ from template.serializers import TemplateSerializer
 class TemplateViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     queryset = Template.objects.all()
     serializer_class = TemplateSerializer
+    pagination_class = DefaultPagination
 
     def retrieve(self, request, *args, **kwargs):
         """
