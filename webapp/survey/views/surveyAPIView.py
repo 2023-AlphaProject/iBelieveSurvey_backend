@@ -1,7 +1,5 @@
-import os
 from datetime import date
 
-import boto3
 from django.db.models import Count
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
@@ -9,10 +7,8 @@ from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework.response import Response
 
 from survey.models import Survey
-from user.models import User
 from survey.permissions import IsSurveyOwnerOrReadOnly
 from survey.serializers import SurveySerializer
-from django.contrib.auth import authenticate, login
 
 
 class WinningPercentageOrderingFilter(filters.OrderingFilter):
@@ -25,6 +21,7 @@ class WinningPercentageOrderingFilter(filters.OrderingFilter):
                 return sorted(queryset, key=lambda p: p.winningPercentage, reverse=is_descending)
             else:
                 return queryset.order_by(*ordering)
+
 
 class ParticipantsFilter(filters.BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
@@ -83,7 +80,7 @@ class SurveyAPIView(CreateAPIView, ListAPIView):
         access = request.user
         if not access:
             return Response({'message': '로그인이 필요합니다. '}, status=400)
-        else :
+        else:
             # return Response({'message': '인증된 사용자입니다.'}, status=200)
             return super().create(request, *args, **kwargs)
 

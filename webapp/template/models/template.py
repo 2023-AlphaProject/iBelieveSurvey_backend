@@ -70,14 +70,14 @@ class Template(models.Model):
     )
 
     item_type = models.CharField(
-        max_length=50,
+        max_length=100,
         verbose_name="상품 유형",
         null=False,
         default=""
     )
 
     product_name = models.CharField(
-        max_length=20,
+        max_length=100,
         verbose_name="상품명",
         null=False,
         default=""
