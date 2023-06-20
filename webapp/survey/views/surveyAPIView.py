@@ -18,8 +18,13 @@ class WinningPercentageOrderingFilter(filters.OrderingFilter):
 
         if ordering:
             if ordering[0] == 'winningPercentage' or ordering[0] == '-winningPercentage':
+                queryset = queryset.filter(end_at__gte=date.today())
                 is_descending = ordering[0].startswith('-')
                 return sorted(queryset, key=lambda p: p.winningPercentage, reverse=is_descending)
+            if ordering[0] == 'end_at' or ordering[0] == '-end_at':
+                queryset = queryset.filter(end_at__gte=date.today())
+                is_descending = ordering[0].startswith('-')
+                return sorted(queryset, key=lambda p: p.end_at, reverse=is_descending)
             else:
                 return queryset.order_by(*ordering)
 
