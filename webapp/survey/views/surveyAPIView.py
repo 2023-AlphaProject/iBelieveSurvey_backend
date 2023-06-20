@@ -12,7 +12,7 @@ from survey.permissions import IsSurveyOwnerOrReadOnly
 from survey.serializers import SurveySerializer
 
 
-class WinningPercentageOrderingFilter(filters.OrderingFilter):
+class CustomOrderingFilter(filters.OrderingFilter):
     def filter_queryset(self, request, queryset, view):
         ordering = self.get_ordering(request, queryset, view)
 
@@ -59,7 +59,7 @@ class SurveyAPIView(CreateAPIView, ListAPIView):
         filters.SearchFilter,
         ParticipantsFilter,
         SurveyStatusFilter,
-        WinningPercentageOrderingFilter,
+        CustomOrderingFilter,
     ]
     ordering = ['id']
     ordering_fields = ['started_at', 'end_at', 'participants', 'winningPercentage']
